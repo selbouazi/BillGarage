@@ -10,7 +10,7 @@ import { waLink } from "@/lib/whatsapp.js";
  */
 export default function Hero() {
   return (
-    <section className="relative isolate flex min-h-[92svh] items-center overflow-hidden pt-24 pb-16 sm:pt-28">
+    <section className="relative isolate flex min-h-[92svh] items-center overflow-hidden pt-28 pb-16 sm:pt-32">
       {/* Fondo: foto real del taller (public/hero.webp — Seat Ateca) */}
       <img
         src="/hero.webp"
