@@ -32,7 +32,7 @@ export default function DesignSystem() {
       <Container>
         {/* ---------------- Tipografía ---------------- */}
         <header className="mb-16">
-          <img src="/logo.svg" alt="Bill Garage" className="mb-6 h-16 w-auto" />
+          <img src="/logo.png" alt="Bill Garage" className="mb-6 h-16 w-auto" />
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Sistema de diseño · Bloque 1
           </p>

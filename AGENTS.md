@@ -41,7 +41,9 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
    `// TODO` o `// EJEMPLO` en el código y se documenta en `README.md` §9.
    Los datos reales y su estado están en [`docs/02-datos.md`](docs/02-datos.md).
 2. **Nunca borrar ni sobrescribir los archivos del cliente**: fotos reales en
-   `public/coches/`, `public/hero.webp`, `public/logo.svg`, `public/favicon.svg`.
+   `public/coches/`, `public/hero.webp`, `public/logo.png`,
+   `public/favicon.png` (y los originales `logo.svg`, `favicon.svg`,
+   `favicoin.png`).
 3. **Tokens, no valores sueltos**: colores, radios y tipografías salen de
    `src/index.css` → bloque `@theme`. No meter `#hex` sueltos en componentes.
 4. **Un solo acento rojo** (`--color-accent: #e11d2e`; para texto usar
@@ -97,8 +99,9 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
 ## Estado del proyecto (octubre 2026)
 
 - ✅ 6 coches con **foto real**; hero con foto provisional del taller.
-- ✅ Logo y favicon del cliente (`public/logo.svg`, `public/favicon.svg` —
-  trazados en **negro puro**: vigilar contraste sobre fondo `#0a0a0a`).
+- ✅ Logo y favicon **a color** del cliente (`public/logo.png` y
+  `public/favicon.png`, fondo transparente). Los SVG negros y `favicoin.png`
+  quedan en `public/` sin uso.
 - ✅ Perfil de Wallapop real en hero, opiniones, redes, footer y JSON-LD.
 - ⚠️ Formularios **simulados**; el canal real de contacto es WhatsApp
   (612 276 847).

@@ -67,9 +67,10 @@ valuationMessage(values)     // "Hola, me gustaría una valoración…: Marca…
 - **Para añadir más ángulos**: subir `2.webp`, `3.webp` y añadirlos al array
   `fotos` del coche (ver [02-datos.md](02-datos.md)). La galería se adapta sola:
   con 1 foto no muestra flechas ni contador.
-- **Logo/favicon**: `public/logo.svg` y `public/favicon.svg` (del cliente).
-  ⚠️ Son trazados en **negro puro**: sobre `#0a0a0a` puede quedar poco
-  visible; comprobarlo siempre que se cambie el header/footer.
+- **Logo/favicon**: `public/logo.png` (a color, fondo transparente) y
+  `public/favicon.png` (badge circular), ambos del cliente. Los originales
+  `logo.svg`/`favicon.svg` (monocromos en negro) y `favicoin.png` quedan en
+  `public/` sin uso.
 - El antiguo generador de placeholders fue **eliminado** (junto a `sharp`):
   las 6 fichas tienen foto real.
 

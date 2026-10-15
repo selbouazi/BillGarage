@@ -46,8 +46,9 @@ Páginas disponibles:
 public/
   coches/<id>/1.webp      ← foto real de cada coche (1 por ficha)
   hero.webp               ← foto de fondo del hero (provisional, ver §9)
-  logo.svg                ← logo del cliente (cabecera y footer, ver §4)
-  favicon.svg             ← favicon del cliente
+  logo.png                ← logo a color del cliente (cabecera y footer, ver §4)
+  favicon.png             ← favicon (badge circular del cliente)
+  logo.svg, favicon.svg, favicoin.png  ← originales del cliente (sin uso, §4)
   sitemap.xml, robots.txt, _redirects
 scripts/
   smoke.jsx                   ← test SSR (npm run smoke)
@@ -116,16 +117,17 @@ Notas:
 
 ## 4. Cómo cambiar el logo
 
-- **`public/logo.svg`** → logo de la cabecera y el footer.
-- **`public/favicon.svg`** → icono de pestaña.
+- **`public/logo.png`** → logo a color de la cabecera y el footer
+  (PNG con fondo transparente, 1157×803).
+- **`public/favicon.png`** → icono de pestaña (badge circular, 512×512,
+  generado a partir de `favicoin.png`, el original que entregó el cliente).
 - Referencias en el código: `src/components/Header.jsx`,
-  `src/components/Footer.jsx` y `src/pages/DesignSystem.jsx` (buscar `logo.svg`).
-- Los originales en PNG que entregó el cliente ya **no están en el proyecto**
-  (limpieza): las copias definitivas son los dos SVG de `public/`.
-- Para cambiar de formato: sustituye el archivo en `public/` y actualiza la
-  ruta en los 3 componentes. Si el nuevo logo es oscuro, acordar versión clara
-  porque el fondo de la web es `#0a0a0a` (los SVG actuales son trazados en
-  negro puro, ver §9).
+  `src/components/Footer.jsx` y `src/pages/DesignSystem.jsx` (buscar
+  `logo.png`); el favicon, en `index.html`.
+- Sin uso en la web (originales del cliente, conservados por si acaso):
+  `logo.svg` y `favicon.svg` (versiones monocromas en negro) y `favicoin.png`.
+- Para cambiarlo: sustituye el PNG en `public/` (mismo nombre). Si el nuevo
+  logo es oscuro, acordar versión clara: el fondo de la web es `#0a0a0a`.
 
 ---
 
@@ -212,9 +214,9 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
 - **Fotos**: añadir más ángulos de los 6 coches (interior, atrás); crear también
   `og.png` 1200×630. La imagen del hero (`public/hero.webp`)
   es provisional: sustituirla por una foto propia del taller.
-- **Logo**: ya entregado por el cliente (`public/logo.svg` y
-  `public/favicon.svg`); queda confirmar que se distingue bien sobre el fondo
-  oscuro (§4).
+- **Logo**: ✅ resuelto — la web usa el logo **a color** del cliente
+  (`public/logo.png` + `public/favicon.png`, fondo transparente). Los SVG
+  monocromos y `favicoin.png` quedan en `public/` sin uso (§4).
 - **Legales** (`src/pages/legal/content.jsx`): nombre, NIF, domicilio y email
   del titular; finalidades del tratamiento; fecha de revisión. Revisar con un
   profesional antes de publicar.

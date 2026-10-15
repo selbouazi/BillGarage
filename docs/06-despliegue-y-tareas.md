@@ -59,7 +59,7 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 | Cambiar los textos legales | `src/pages/legal/content.jsx` |
 | Añadir una sección nueva | crear en `src/sections/` y montarla en `src/pages/Home.jsx` |
 | Poner el formulario real | `src/lib/forms.js` → `simulateSubmit()` (ver [05-integraciones.md](05-integraciones.md)) |
-| Cambiar el logo o favicon | `public/logo.svg` / `public/favicon.svg` (ver README §4) |
+| Cambiar el logo o favicon | `public/logo.png` / `public/favicon.png` (ver README §4) |
 | Cambiar la foto del hero | `public/hero.webp` |
 | Probar que nada se rompe | `npm run build && npm run smoke` |
 

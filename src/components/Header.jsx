@@ -61,9 +61,9 @@ export default function Header() {
       }`}
     >
       <Container className="flex items-center justify-between gap-4">
-        {/* Logo del cliente (public/logo.svg) */}
+        {/* Logo del cliente (public/logo.png) */}
         <Link to="/" aria-label="Bill Garage — ir al inicio" className="shrink-0">
-          <img src="/logo.svg" alt="Bill Garage — compra y venta de coches" className="h-9 w-auto sm:h-10" />
+          <img src="/logo.png" alt="Bill Garage — compra y venta de coches" className="h-9 w-auto sm:h-10" />
         </Link>
 
         <nav aria-label="Navegación principal" className="hidden items-center gap-8 lg:flex">

@@ -18,9 +18,9 @@ export default function Footer() {
       <Container className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         {/* Marca */}
         <div>
-          {/* Logo del cliente (public/logo.svg) */}
+          {/* Logo del cliente (public/logo.png) */}
           <img
-            src="/logo.svg"
+            src="/logo.png"
             alt="Bill Garage — compra y venta de coches"
             className="mb-4 h-12 w-auto"
           />

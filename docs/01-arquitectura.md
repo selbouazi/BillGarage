@@ -70,8 +70,8 @@ BillGarage/
 ├── public/               ← archivos que se sirven TAL CUAL en la raíz del dominio
 │   ├── coches/<id>/1.webp  ← foto real de cada coche (1 por ficha)
 │   ├── hero.webp           ← foto de fondo del hero (670×444, 33 KB)
-│   ├── logo.svg            ← logo del cliente (cabecera y footer)
-│   ├── favicon.svg         ← icono de pestaña
+│   ├── logo.png            ← logo a color (cabecera y footer; originales: logo.svg, favicon.svg, favicoin.png)
+│   ├── favicon.png         ← favicon (badge circular)
 │   ├── sitemap.xml         ← mapa del sitio para Google
 │   ├── robots.txt          ← instrucciones para los rastreadores
 │   └── _redirects          ← redirección SPA para Cloudflare Pages
