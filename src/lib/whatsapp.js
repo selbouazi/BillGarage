@@ -15,7 +15,7 @@ export const PHONE_TEL = "+34612276847";
  * @returns {string} https://wa.me/34612276847?text=...
  */
 export function waLink(message = "", phone = WHATSAPP_PHONE) {
-  const text = encodeURIComponent(message).replace(/%0A/g, "%0A");
+  const text = encodeURIComponent(message);
   return `https://wa.me/${phone}${text ? `?text=${text}` : ""}`;
 }
 
@@ -30,7 +30,14 @@ export function carInquiryMessage(car) {
 }
 
 /** Mensaje para la tasación de un coche usado (Bloque 5). */
-export function valuationMessage({ marca, modelo, año, km, combustible } = {}) {
+export function valuationMessage({
+  marca,
+  modelo,
+  año,
+  km,
+  combustible,
+  comentarios,
+} = {}) {
   const partes = [
     "Hola, me gustaría una valoración de mi coche:",
     marca && `Marca: ${marca}`,
@@ -38,6 +45,7 @@ export function valuationMessage({ marca, modelo, año, km, combustible } = {}) 
     año && `Año: ${año}`,
     km && `Kilometraje: ${km}`,
     combustible && `Combustible: ${combustible}`,
+    comentarios && `Comentarios: ${comentarios}`,
   ].filter(Boolean);
   return partes.join("\n");
 }

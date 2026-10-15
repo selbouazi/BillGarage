@@ -26,3 +26,11 @@ desktop.ini
 npm-debug.log*
 yarn-error.log*
 *.log
+
+# Descargas / capturas accidentales (no van al repo ni al despliegue)
+*.exe
+*.torrent
+*.iso
+
+# Borradores de diseño en la raíz (los de public/ sí se usan)
+/*.png
