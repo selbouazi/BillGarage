@@ -186,6 +186,9 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
   redirect SPA `/* → /index.html 200`).
 - **Cloudflare Pages**: command `npm run build`, output `dist`; el archivo
   `public/_redirects` (que Vite copia a `dist`) aporta la misma regla SPA.
+- **Vercel**: `vercel.json` con rewrites SPA (`/(.*) → /index.html` — Vercel
+  no lee `netlify.toml` ni `_redirects`). Al importar el repo: rama `main`,
+  preset Vite, Root Directory `./`.
 - **Antes de publicar**: sustituir `https://billgarage.example` por el dominio
   real en `index.html`, `src/lib/site.js`, `public/sitemap.xml` y
   `public/robots.txt`.

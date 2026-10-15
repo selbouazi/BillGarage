@@ -34,8 +34,13 @@ git push -u origin main
 Pasos: conectar el repo en Netlify → Build command `npm run build` →
 Publish directory `dist` → publicar.
 
-**Cloudflare Pages / Vercel / cualquier otro**: leen `public/_redirects`
-(`/*  /index.html  200`).
+**Cloudflare Pages / cualquier otro que lea `_redirects`**: leen
+`public/_redirects` (`/*  /index.html  200`).
+
+**Vercel**: usa `vercel.json` (incluido) con `rewrites`
+(`/(.*) → /index.html`), porque **no lee** `netlify.toml` ni `_redirects`.
+Al importar el repo: rama `main`, preset Vite, Root Directory `./`
+(build `npm run build`, output `dist`).
 
 Después de publicar: sustituir el dominio ficticio (§4) y comprobar una ruta
 profunda (`/coches/seat-leon-2013`) y el favicon.
