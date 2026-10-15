@@ -67,7 +67,7 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
 | `src/index.css` | **Tokens del diseño** (colores, tipografías, radios, `.reveal`, `.glow-hover`) |
 | `src/data/cars.js` | Inventario: los 6 coches. Añadir/quitar coches aquí |
 | `src/lib/site.js` | Datos del negocio: teléfono, redes, cifras, dirección, dominio |
-| `src/data/reviews.js` | Reseñas (**de ejemplo**, todo `// EJEMPLO`) |
+| `src/data/reviews.js` | Reseñas **reales** de Wallapop (3, aportadas por el cliente) |
 | `src/lib/whatsapp.js` | Enlaces `wa.me` con mensaje prellenado |
 | `src/lib/forms.js` | Validación de formularios + envío **simulado** |
 | `src/App.jsx` | Rutas + Header/Footer + scroll |

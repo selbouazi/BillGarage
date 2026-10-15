@@ -78,9 +78,10 @@ propaga a toda la web.
 
 ## 3. `src/data/reviews.js` — las reseñas
 
-Tres objetos `{ autor, estrellas, texto, fecha }`. **Todo es `// EJEMPLO`**:
-antes de publicar hay que pedir permiso al cliente y sustituirlos por reseñas
-reales de Wallapop (o quitarlas). Las cifras 4,9★ y 67 sí son reales.
+Tres objetos `{ autor, estrellas, texto, fecha }` con **reseñas reales de
+Wallapop**, aportadas por el cliente en octubre de 2026 con permiso de
+publicación. Las cifras 4,9★ y 67 también son reales. Para añadir una nueva:
+copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 
 ---
 
@@ -91,7 +92,7 @@ reales de Wallapop (o quitarlas). Las cifras 4,9★ y 67 sí son reales.
 | Los 6 coches: marca, modelo, año, precio, estado | km, versión, color, equipamiento, garantía, ITV |
 | Fotos reales de los 6 coches y del hero | Descripciones de cada coche |
 | Teléfono, Instagram, TikTok, Wallapop | Dominio, dirección exacta, horario |
-| 4,9★ · 67 valoraciones · +70 ventas | Las 3 reseñas con texto |
+| 4,9★ · 67 valoraciones · +70 ventas · 3 reseñas reales de Wallapop | — |
 | Logo y favicon | Textos legales (nombre, NIF, domicilio) |
 
 ---

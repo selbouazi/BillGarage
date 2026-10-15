@@ -80,10 +80,6 @@ export default function Reviews() {
             ))}
           </div>
         </div>
-
-        {/* TODO: PEDIR PERMISO AL CLIENTE para reproducir reseñas reales de
-            Wallapop (autores, textos y fotos) antes de publicar.
-            Las tarjetas de arriba son EJEMPLO. */}
       </Container>
     </section>
   );

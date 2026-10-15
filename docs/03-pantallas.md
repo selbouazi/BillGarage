@@ -37,7 +37,7 @@ Orden exacto de las 9 secciones:
 | 2 | **Stock** (`Stock.jsx`) | Listado de coches + filtros | Filtros generados de los datos |
 | 3 | **Entrega tu coche** (`TradeIn.jsx`) | Formulario de tasación (el gancho comercial) | Validación + envío simulado + botón WhatsApp |
 | 4 | **Por qué nosotros** (`WhyUs.jsx`) | 4 tarjetas: trato directo, parte del pago, revisión y garantía, trámites y financiación | Iconos propios |
-| 5 | **Opiniones** (`Reviews.jsx`) | Cifra 4,9★ + botón "Ver perfil en Wallapop" + 3 reseñas | Las reseñas son de ejemplo |
+| 5 | **Opiniones** (`Reviews.jsx`) | Cifra 4,9★ + botón "Ver perfil en Wallapop" + 3 reseñas | Reseñas **reales** de Wallapop |
 | 6 | **Estadísticas** (`Stats.jsx`) | +70 ventas · 4,9★/67 valoraciones · marcas en stock | La 3ª cifra se **calcula** de `cars.js` |
 | 7 | **Redes** (`Social.jsx`) | 3 tarjetas: Instagram, TikTok, Wallapop | Todas abren en pestaña nueva |
 | 8 | **Dónde estamos** (`Location.jsx`) | iframe de Google Maps + horario + "cómo llegar" | El horario saldrá cuando `SITE.schedule` tenga valor |

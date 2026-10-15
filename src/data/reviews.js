@@ -1,32 +1,31 @@
-/** Reseñas de ejemplo.
- * TODOS los textos y nombres de este archivo son `// EJEMPLO` (ficticios,
- * para el prototipo).
- * TODO: pedir PERMISO al cliente antes de publicar reseñas reales de Wallapop
- * (autores, textos y posibles fotos) y sustituir este array por las reales.
+/** Reseñas reales de Wallapop (perfil de Bill G.).
+ * Textos aportados por el cliente en octubre de 2026, con permiso para
+ * publicarlos. Se reproducen casi tal cual (solo normalización tipográfica).
+ * Para añadir una nueva: copiar el texto con su autor y fecha relativa.
  */
 export const reviews = [
   {
     id: "r1",
-    autor: "Marta R.", // EJEMPLO
+    autor: "Alberto D.",
     estrellas: 5,
     texto:
-      "Trato excelente de principio a fin. Me explicaron bien el coche y la entrega fue rápida y sin sorpresas.", // EJEMPLO
-    fecha: "2025", // EJEMPLO
+      "Todo perfecto, como ha indicado en la descripción, chico de palabra puntual y serio. LO RECOMIENDO",
+    fecha: "Hace 1 mes",
   },
   {
     id: "r2",
-    autor: "Jordi P.", // EJEMPLO
+    autor: "Alejo C.",
     estrellas: 5,
     texto:
-      "Entregué mi antiguo coche como parte del pago y el proceso fue muy sencillo. Repetiré.", // EJEMPLO
-    fecha: "2025", // EJEMPLO
+      "Todo ha ido perfecto. El encuentro fue puntual y el coche estaba tal y como se describía en el anuncio. Muy satisfecho con la compra y con todo el proceso. ¡Recomendable al 100%!",
+    fecha: "Hace 3 semanas",
   },
   {
     id: "r3",
-    autor: "Laia M.", // EJEMPLO
+    autor: "Joan G.",
     estrellas: 5,
     texto:
-      "Buen precio y respuestas rápidas por WhatsApp. El coche tal y como lo describían.", // EJEMPLO
-    fecha: "2026", // EJEMPLO
+      "Muy contentos con la compra, tal como ponía la descripción. Chico educado. Todo se ha tramitado con rapidez y transparencia. Recomendable de 10.",
+    fecha: "Hace 4 meses",
   },
 ];

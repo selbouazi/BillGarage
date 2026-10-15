@@ -220,8 +220,6 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
   profesional antes de publicar.
 - **SEO** (`index.html`, `sitemap.xml`, `robots.txt`): dominio real, horario y
   dirección en el JSON-LD, imagen Open Graph.
-- **Reseñas**: pedir **permiso** al cliente para publicar reseñas reales de
-  Wallapop (`src/data/reviews.js`).
 - **Cookies**: la web no usa cookies propias no esenciales (sin analítica ni
   publicidad). El iframe de Google Maps **sí** puede instalar cookies de
   tercero: valorar añadir aviso o cambiar a un mapa sin cookies
@@ -232,7 +230,6 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
 - `src/data/cars.js`: versión, km, cambio, cv, cc, carrocería, plazas, color,
   etiqueta, ITV, propietarios, equipamiento y descripción de los 6 coches
   (marca, modelo, año, precio y estado **sí son reales**).
-- `src/data/reviews.js`: todos los textos, autores y fechas.
 
 ---
 
