@@ -1,0 +1,7 @@
+# robots.txt — Bill Garage
+User-agent: *
+Allow: /
+Disallow: /sistema-diseno
+
+# TODO: sustituir por el dominio real
+Sitemap: https://billgarage.example/sitemap.xml

@@ -1,0 +1,25 @@
+{
+  "name": "bill-garage",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "smoke": "vite build --ssr scripts/smoke.jsx --outDir .smoke --emptyOutDir && node .smoke/smoke.js"
+  },
+  "dependencies": {
+    "@fontsource/barlow-condensed": "^5.2.5",
+    "@fontsource/inter": "^5.2.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
+    "@vitejs/plugin-react": "^5.0.2",
+    "tailwindcss": "^4.1.13",
+    "vite": "^7.1.7"
+  }
+}

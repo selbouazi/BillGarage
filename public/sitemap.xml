@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: sustituir https://billgarage.example por el dominio real antes de publicar -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://billgarage.example/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url><loc>https://billgarage.example/coches/citroen-c4-picasso-2007</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/coches/seat-leon-2013</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/coches/volkswagen-golf-rline-2011</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/coches/seat-ibiza-2011</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/coches/peugeot-208-2013</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/coches/opel-corsa-2012</loc><priority>0.8</priority></url>
+  <url><loc>https://billgarage.example/aviso-legal</loc><priority>0.3</priority></url>
+  <url><loc>https://billgarage.example/politica-privacidad</loc><priority>0.3</priority></url>
+  <url><loc>https://billgarage.example/politica-cookies</loc><priority>0.3</priority></url>
+</urlset>

@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+
+# Build y tests (se regeneran)
+dist/
+.smoke/
+*.local
+
+# Variables de entorno / secretos
+.env
+.env.*
+!.env.example
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+*.log

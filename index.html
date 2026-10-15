@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>Bill Garage — Compra y venta de coches de ocasión en El Vendrell</title>
+    <meta
+      name="description"
+      content="Bill Garage: compra y venta de coches de ocasión en El Vendrell, Tarragona. Entrega tu coche como parte del pago. 4,9★ en Wallapop con más de 70 ventas."
+    />
+    <!-- TODO: dominio real del proyecto (sustituir billgarage.example) -->
+    <link rel="canonical" href="https://billgarage.example/" />
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bill Garage" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="Bill Garage — Compra y venta de coches de ocasión en El Vendrell" />
+    <meta
+      property="og:description"
+      content="Coches de ocasión revisados en El Vendrell. Entrega tu coche como parte del pago."
+    />
+    <meta property="og:url" content="https://billgarage.example/" />
+    <!-- TODO: crear imagen Open Graph 1200×630 (p. ej. public/og.png) y añadirla:
+         <meta property="og:image" content="https://billgarage.example/og.png" /> -->
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Datos estructurados del negocio (AutoDealer / LocalBusiness) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": ["AutoDealer", "LocalBusiness"],
+            "@id": "https://billgarage.example/#business",
+            "name": "Bill Garage",
+            "description": "Compra y venta de vehículos de ocasión en El Vendrell, Tarragona. Entrega del coche del cliente como parte del pago.",
+            "url": "https://billgarage.example/",
+            "telephone": "+34612276847",
+            "priceRange": "€€",
+            "currenciesAccepted": "EUR",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "La Papiola",
+              "addressLocality": "El Vendrell",
+              "postalCode": "43700",
+              "addressRegion": "Tarragona",
+              "addressCountry": "ES"
+            },
+            "geo": { "@type": "GeoCoordinates", "latitude": 41.2167, "longitude": 1.5333 },
+            "areaServed": "El Vendrell y alrededores",
+            "openingHoursSpecification": [],
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "67",
+              "bestRating": "5"
+            },
+            "sameAs": [
+              "https://www.instagram.com/bill.garage_/",
+              "https://www.tiktok.com/@bill.garage_",
+              "https://es.wallapop.com/user/erwanj-46555843"
+            ]
+          }
+        ]
+      }
+    </script>
+    <!-- TODOs de este bloque: dirección exacta (streetAddress/geo),
+         horario (openingHoursSpecification) y cifra/URL del dominio. -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      Bill Garage — Compra y venta de coches de ocasión en El Vendrell
+      (Tarragona). Teléfono 612 276 847. Esta web necesita JavaScript
+      habilitado.
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
