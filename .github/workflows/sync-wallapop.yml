@@ -1,0 +1,72 @@
+# Sincroniza src/data/cars.generated.json desde el perfil público de Wallapop.
+#
+# - Cada minuto comprueba el perfil (TODO TEMPORAL para pruebas: volver a
+#   "17,47 * * * *", cada 30 min, antes de publicar); solo descarga fichas de
+#   anuncios cambiados.
+# - Solo commitea si el inventario difiere (git diff como gate) → Vercel no
+#   redespliega si no hay novedades.
+# - Si el script falla (Wallapop caído, 0 anuncios, cambios en la página):
+#   la Action falla, la web se queda en el último snapshot y GitHub envía un
+#   email de aviso al dueño del repositorio.
+#
+# NOTA (pendiente de revisión del propietario): tras dar el OK, añadir aquí un
+# paso final de fast-forward de `main` desde `integracion` para que los cambios
+# lleguen a producción. De momento solo se actualiza `integracion` (previsualización).
+name: Sincronizar stock con Wallapop
+
+on:
+  schedule:
+    - cron: "* * * * *" # TODO TEMPORAL: cada 1 min para pruebas; restaurar "17,47 * * * *" (cada 30 min) antes de publicar
+  workflow_dispatch: # disparo manual desde la pestaña Actions
+
+# Nunca dos sincronizaciones a la vez
+concurrency:
+  group: sync-wallapop
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integracion
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sincronizar con Wallapop
+        run: node scripts/sync-wallapop.mjs
+
+      - name: Comprobar si hay cambios
+        id: diff
+        run: |
+          if git diff --quiet -- src/data/cars.generated.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Inventario sin cambios: no se hace nada más."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Inventario actualizado: validando antes de publicar."
+          fi
+
+      - name: Instalar dependencias y validar (build + smoke)
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          npm ci
+          npm run build
+          npm run smoke
+
+      - name: Commit y push en integracion
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin integracion
+          git add src/data/cars.generated.json
+          git commit -m "feat: sincronizar stock desde Wallapop ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git push origin HEAD:integracion
