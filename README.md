@@ -7,9 +7,11 @@ enseñar al cliente y cerrar el proyecto.
 - **Stack**: React 19 + Vite 7 + Tailwind CSS 4 + React Router 7
 - **Tipografías**: Barlow Condensed (títulos, cursiva como el logo) + Inter
   (texto), cargadas con `@fontsource` — sin CDNs externas
-- **Datos**: `src/data/cars.js` (fácil de sustituir por Google Sheets / Sanity /
-  Supabase)
-- **Despliegue**: Netlify o Cloudflare Pages (regla SPA incluida)
+- **Datos**: inventario **sincronizado automáticamente desde Wallapop**
+  (`src/data/cars.generated.json`; fácil de sustituir por Google Sheets /
+  Sanity / Supabase)
+- **Despliegue**: Vercel (rama `main`, con `vercel.json` y rewrites SPA);
+  queda preparado también para Netlify (`netlify.toml` + `public/_redirects`)
 - **Documentación**: [`docs/`](docs/README.md) — manual por temas (arquitectura,
   datos, pantallas, diseño, integraciones, despliegue y pendientes)
 - **Para asistentes de IA**: [`AGENTS.md`](AGENTS.md) — contexto, reglas y
@@ -25,6 +27,7 @@ npm run dev        # servidor de desarrollo → http://localhost:5173
 npm run build      # build de producción en dist/
 npm run preview    # ver el build de producción
 npm run smoke      # test SSR: comprueba que todas las páginas renderizan
+npm run sync:wallapop  # inventario desde Wallapop (automático cada 30 min)
 ```
 
 Páginas disponibles:
@@ -58,60 +61,63 @@ src/
   sections/     Hero, Stock, TradeIn, WhyUs, Reviews, Stats, Social,
                 Location, Contact
   pages/        Home, CarDetail, NotFound, DesignSystem, legal/
-  data/         cars.js, reviews.js
+  data/         cars.js (adaptador), cars.generated.json (Wallapop),
+                cars.overrides.json, reviews.js
   lib/          site.js (datos del negocio), whatsapp.js, forms.js, seo.js
   index.css     ← TOKENS del diseño (colores, tipografías, utilidades)
 ```
 
 ---
 
-## 3. Cómo editar los coches (`src/data/cars.js`)
+## 3. Cómo se actualizan los coches (automático, desde Wallapop)
 
-Añadir un coche = añadir un objeto al array `cars`:
+El inventario **no se edita a mano en la web**: sale del perfil público de
+Wallapop del cliente (<https://es.wallapop.com/user/erwanj-46555843>). Un
+script lo comprueba **cada 30 min** con una Action de GitHub y actualiza
+`src/data/cars.generated.json`; solo se publica si algo ha cambiado (siempre
+con build + smoke antes):
+
+| Quiero… | Dónde se hace |
+|---|---|
+| Añadir / editar un coche, precio, fotos | **En Wallapop** (o ya: `npm run sync:wallapop`) |
+| Poner un coche como reservado | Botón "reservado" de Wallapop |
+| Borrar un coche | Borrar el anuncio → desaparece de la web |
+| Marcar vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `[{ "id": "<slug>", "estado": "vendido" }]` |
+
+`src/data/cars.js` es solo el **adaptador** (lo generado + los ajustes
+manuales): **no editar a mano**. Cada coche trae la ficha estructurada de
+Wallapop, todas las fotos del anuncio y la descripción limpia del bloque de
+palabras clave SEO. Ejemplo real:
 
 ```js
 {
-  id: "seat-ibiza-2011",        // slug único (usado en la URL /coches/slug)
-  marca: "Seat",
-  modelo: "Ibiza",
-  version: "1.4 TDI 80cv",
-  año: 2011,
-  km: 148000,
-  combustible: "Diésel",        // Gasolina | Diésel | Híbrido | Eléctrico | GLP
-  cambio: "Manual",             // Manual | Automático
-  cv: 80,
-  cc: 1422,
-  carroceria: "Utilitario",
-  puertas: 5,
-  plazas: 5,
-  color: "Blanco",
-  etiqueta: "B",                // 0 | ECO | B | C
-  garantiaMeses: 12,            // TODO confirmar
-  itvHasta: "2027-03",          // opcional
-  propietarios: 2,              // opcional
-  precio: 3500,
-  estado: "disponible",         // disponible | reservado | vendido
-  destacado: false,
-  nuevo: false,                 // opcional → muestra la etiqueta "Nuevo"
-  fotos: ["/coches/seat-ibiza-2011/1.webp", …],
-  equipamiento: ["Aire acondicionado", "Bluetooth"],
-  descripcion: "Texto libre."
+  id: "fiat-tipo-2017-1314457031",   // ← es la URL: /coches/fiat-tipo-2017-…
+  wallapopId: "p618nvn7exz5",
+  wallapopUrl: "https://es.wallapop.com/item/fiat-tipo-2017-1314457031",
+  marca: "FIAT", modelo: "Tipo", version: "1.4 16v 95 Easy 5p",
+  año: 2017, km: 170000, combustible: "Gasolina", cambio: "Manual", cv: 95,
+  carroceria: "Pequeño", puertas: 5, plazas: 5, etiqueta: "C",
+  precio: 5500, estado: "disponible", destacado: true,
+  fotos: ["https://cdn.wallapop.com/…?pictureSize=W1024", …],  // 39 fotos
+  equipamiento: ["Volante multifuncion", "Control crucero", …],
+  descripcion: "…",                  // limpiada del bloque SEO de Wallapop
+  itvHasta: "2027-01", propietarios: 1, garantiaMeses: 12  // leídos de la descripción
 }
 ```
 
 Notas:
 
-- **Sin matrícula** (privacidad).
 - Los **filtros del listado se generan solos** a partir de los datos: no hay
   que tocar nada al añadir un coche.
 - Los coches con `estado: "vendido"` **no se muestran**; `"reservado"` bloquea
   el botón principal de WhatsApp.
-- **Fotos**: se colocan en `public/coches/<id>/` como `1.webp`, `2.webp`…
-  (WebP). Las del cliente son **verticales 640×853**: los marcos usan `aspect-[4/3]`
-  con recorte `object-[center_57%]` para que el coche quede centrado.
-  Ahora **los 6 coches tienen foto real** (1 foto cada uno); si añades más ángulos,
-  basta con subir `2.webp`, `3.webp` y añadirlos al array `fotos` (la galería
-  se adapta sola: con 1 foto no muestra flechas ni contador).
+- Las fotos se sirven del **CDN de Wallapop** (no pesan en el repositorio) y
+  llevan `referrerPolicy="no-referrer"`; los marcos son 4:3 con recorte
+  `object-[center_57%]` para centrar los coches verticales. Las fotos
+  antiguas de muestra siguen en `public/coches/` (conservadas, sin uso).
+- Seguridades del sync: perfil con 0 anuncios → **no se vacía la web**; si
+  Wallapop falla se conserva el último snapshot (y GitHub avisa por email).
+  Detalle en [`docs/02-datos.md`](docs/02-datos.md).
 
 ---
 
@@ -206,14 +212,15 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
   *Ya está el perfil de Wallapop* (`SITE.wallapop`, perfil **Bill G.**:
   <https://es.wallapop.com/user/erwanj-46555843>): se usa en el hero, en
   Opiniones, en Redes, en el footer y en el JSON-LD `sameAs`.
-- **`src/data/cars.js`**: `garantiaMeses` de cada coche.
+- **Garantía**: el sync detecta "12 MESES DE GARANTÍA" en las descripciones
+  del cliente; confirmar con él si aplica a todo el stock.
 - **Textos**: presentación del hero (`Hero.jsx`), plazo de valoración y
   documentación necesaria (`TradeIn.jsx`), garantía/ revisión previa /
   trámites / financiación (`WhyUs.jsx`), años de experiencia (`Stats.jsx`),
   quién contesta en el mensaje de éxito (`TradeIn.jsx`).
-- **Fotos**: añadir más ángulos de los 6 coches (interior, atrás); crear también
-  `og.png` 1200×630. La imagen del hero (`public/hero.webp`)
-  es provisional: sustituirla por una foto propia del taller.
+- **Fotos**: las del inventario llegan solas desde Wallapop. Falta crear
+  `og.png` 1200×630. La imagen del hero (`public/hero.webp`) es provisional:
+  sustituirla por una foto propia del taller.
 - **Logo**: ✅ resuelto — la web usa el logo **a color** del cliente
   (`public/logo.png` + `public/favicon.png`, fondo transparente). Los SVG
   monocromos y `favicoin.png` quedan en `public/` sin uso (§4).
@@ -229,9 +236,8 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
 
 ### EJEMPLO — datos de relleno (ficticios)
 
-- `src/data/cars.js`: versión, km, cambio, cv, cc, carrocería, plazas, color,
-  etiqueta, ITV, propietarios, equipamiento y descripción de los 6 coches
-  (marca, modelo, año, precio y estado **sí son reales**).
+- Los **coches ya no tienen datos de relleno**: el inventario entero es real
+  y llega sincronizado desde Wallapop (ver §3).
 
 ---
 

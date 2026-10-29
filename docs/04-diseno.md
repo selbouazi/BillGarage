@@ -87,7 +87,9 @@ La página interna **`/sistema-diseno`** muestra todas las piezas en vivo.
 - **Imágenes WebP** con `width`/`height` (evita saltos de diseño) y
   `loading="lazy"` en todo lo que no es el hero; el hero usa
   `fetchPriority="high"` y se sirve en `public/` (sin procesar en runtime).
-- **Build actual**: CSS ≈ 40,8 kB (7,9 kB gzip) · JS ≈ 337 kB (103 kB gzip).
+- **Fotos del inventario**: se sirven del CDN de Wallapop (W1024) con
+  `referrerPolicy="no-referrer"` (no viaja el referrer del visitante).
+- **Build actual**: CSS ≈ 42,5 kB (8,1 kB gzip) · JS ≈ 381 kB (110 kB gzip).
 - Sin librerías pesadas: el mayor peso es React + React Router.
 - Caché inmutable de 1 año para `/assets/*` (cabeceras en `netlify.toml`).
 - Transiciones cortas (200–500 ms) y `decoding="async"` en imágenes.

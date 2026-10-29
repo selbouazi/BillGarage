@@ -6,52 +6,78 @@
 
 ---
 
-## 1. `src/data/cars.js` — el inventario
+## 1. Inventario — sincronizado desde Wallapop
 
-Un array de objetos; cada objeto es un coche. Campos comunes a todos:
-`marca`, `modelo`, `año`, `precio`, `estado`, `combustible`, `puertas`,
-`carrocería` y `fotos`. El resto (versión, km, cv, cc, color, equipamiento,
-garantía, ITV…) van marcados con `// EJEMPLO` cuando son de relleno.
+**El inventario ya no se edita a mano.** `scripts/sync-wallapop.mjs` lee el
+perfil **público** del cliente (<https://es.wallapop.com/user/erwanj-46555843>)
+y escribe `src/data/cars.generated.json`. La Action
+`.github/workflows/sync-wallapop.yml` lo ejecuta **cada 30 minutos**, solo
+commitea (y por tanto Vercel redespliega) **si el inventario cambió**, y deja
+la web en el último snapshot si Wallapop falla.
+
+| Fichero | Quién lo toca | Qué lleva |
+|---|---|---|
+| `src/data/cars.generated.json` | **La sincronización** (jamás a mano) | Los coches con sus campos estructurados de Wallapop, fotos en CDN (W1024) y descripción limpia |
+| `src/data/cars.overrides.json` | Tú (manual) | Ajustes puntuales por `id` (slug) que Wallapop no recoge, p. ej. `{"id":"…", "estado":"vendido"}` |
+| `src/data/cars.js` | No se edita | Adaptador: generado + overrides. Exporta `cars`, `getCarById`, `getAvailableCars` con las mismas firmas de siempre |
+
+Qué sale de Wallapop (datos **estructurados**, sin parsear texto):
+`marca`, `modelo`, `version`, `año`, `km`, `combustible`, `cambio`, `cv`,
+`carroceria`, `puertas`, `plazas`, `etiqueta` (DGT), `precio`, `estado`
+(`isReserved` de Wallapop), todas las `fotos` y la `descripcion` (recortando
+el bloque de palabras clave SEO que el cliente pega al final). Además el
+sincronizador **extrae de la descripción**: equipamiento (lista de "- "),
+`itvHasta` ("ITV Mayo 2027" → `2027-05`), `propietarios` y `garantiaMeses`
+(cuando escribe "12 MESES DE GARANTÍA").
 
 ```js
+// Ejemplo real de un registro generado:
 {
-  id: "seat-leon-2013",              // ← es la URL: /coches/seat-leon-2013
-  marca: "Seat",
-  modelo: "León",
-  año: 2013,
-  precio: 5900,
-  estado: "reservado",               // disponible | reservado | vendido
-  destacado: true,                   // muestra la etiqueta "Destacado"
-  fotos: ["/coches/seat-leon-2013/1.webp"],
-  ...
+  id: "seat-leon-2010-1314455574",   // ← es la URL: /coches/seat-leon-2010-…
+  wallapopId: "pzpknyn8lkj3",
+  wallapopUrl: "https://es.wallapop.com/item/seat-leon-2010-1314455574",
+  marca: "SEAT", modelo: "Leon", año: 2010, km: 248000,
+  combustible: "Gasolina", cambio: "Manual", cv: 102,
+  etiqueta: "C", precio: 3300, estado: "disponible", destacado: true,
+  fotos: ["https://cdn.wallapop.com/…?pictureSize=W1024", …],
+  equipamiento: ["Volante multifuncion", …],
+  descripcion: "Se vende Seat Leon …",
+  …
 }
 ```
 
-**Los 6 coches del stock** (marca · modelo · año · precio · estado — datos reales):
+> Para ver el inventario actual: el fichero generado o el perfil de Wallapop
+> (hoy, octubre de 2026, **9 coches**). La antigua tabla de los 6 coches de
+> muestra ya no existe: esos anuncios ya no están en Wallapop.
 
-| Coche | Año | Precio | Estado |
-|---|---|---|---|
-| Citroën C4 Picasso | 2007 | 2.600 € | disponible |
-| Seat León | 2013 | 5.900 € | **reservado** |
-| Volkswagen Golf R-Line | 2011 | 5.900 € | disponible |
-| Seat Ibiza | 2011 | 3.500 € | disponible |
-| Peugeot 208 | 2013 | 4.900 € | disponible |
-| Opel Corsa | 2012 | 2.950 € | disponible |
+**Reglas de seguridad del sync** (están en el script): perfil con **0
+anuncios → no escribe nada** (nunca se vacía la web); ficha que falla o no
+valida → se conserva la versión anterior; error → exit 1 sin tocar el fichero
+y GitHub avisa por email.
 
-Helpers exportados:
+Helpers exportados por `cars.js`:
 
 - `getCarById(id)` → devuelve el coche para la página de detalle.
 - `getAvailableCars()` → **filtra los coches `vendido`** (no se muestran).
 
-> **Regla de oro**: al añadir un coche **no hay que tocar ningún componente**.
-> Los filtros, el contador, las marcas y el JSON-LD se generan solos.
-> Único paso extra: subir su foto a `public/coches/<id>/1.webp`.
+> **Regla de oro**: para añadir/editar/quitar un coche **se toca Wallapop**,
+> nunca la web. Los filtros, el contador, las marcas, las fotos y el JSON-LD
+> se generan solos a partir de los datos.
 
 ### Estados
 
 - `disponible` → se muestra y el botón de WhatsApp está activo.
-- `reservado` → se muestra con etiqueta ámbar y **bloquea** el botón principal.
-- `vendido` → **no se muestra** en el listado (ni en los relacionados).
+- `reservado` → llega del **campo "reservado" de Wallapop**; se muestra con
+  etiqueta ámbar y **bloquea** el botón principal.
+- `vendido` → **no se muestra**. En Wallapop, vender/borrar el anuncio lo
+  elimina de la web en ≤30 min; para forzarlo sin borrar el anuncio, usar un
+  override en `cars.overrides.json`.
+
+### Ejecutar la sincronización a mano
+
+```bash
+npm run sync:wallapop   # 1 petición al perfil; fichas solo si hay cambios
+```
 
 ---
 
@@ -89,8 +115,7 @@ copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 
 | Real (dato del cliente) | Inventado / TODO |
 |---|---|
-| Los 6 coches: marca, modelo, año, precio, estado | km, versión, color, equipamiento, garantía, ITV |
-| Fotos reales de los 6 coches y del hero | Descripciones de cada coche |
+| Inventario completo sincronizado de Wallapop: marca, modelo, versión, año, km, motor, cambio, CV, etiqueta, carrocería, puertas, plazas, precio, estado, fotos, descripción, equipamiento, ITV, garantía | — |
 | Teléfono, Instagram, TikTok, Wallapop | Dominio, dirección exacta, horario |
 | 4,9★ · 67 valoraciones · +70 ventas · 3 reseñas reales de Wallapop | — |
 | Logo y favicon | Textos legales (nombre, NIF, domicilio) |
@@ -99,10 +124,11 @@ copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 
 ## 5. Cómo cambiar un dato (receta)
 
-| Quiero… | Archivo |
+| Quiero… | Archivo / acción |
 |---|---|
-| Añadir / editar / quitar un coche | `src/data/cars.js` (+ foto en `public/coches/<id>/`) |
-| Marcar un coche como vendido | `estado: "vendido"` |
+| Añadir / editar / quitar un coche | **En Wallapop** (llega a la web en ≤30 min, o ya con `npm run sync:wallapop`) |
+| Marcar un coche como reservado | Botón "reservado" de Wallapop (o override `estado`) |
+| Marcar un coche como vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes, cifras, horario, dominio | `src/lib/site.js` |
 | Cambiar las reseñas | `src/data/reviews.js` |
 

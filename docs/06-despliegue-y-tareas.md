@@ -51,8 +51,9 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 
 | Quiero… | Dónde |
 |---|---|
-| Añadir, editar o quitar un coche | `src/data/cars.js` (+ foto en `public/coches/<id>/`) |
-| Marcar un coche como vendido | `estado: "vendido"` → deja de mostrarse |
+| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤30 min; o ya: `npm run sync:wallapop`) |
+| Marcar un coche como reservado | Botón "reservado" de Wallapop → etiqueta y CTA bloqueados |
+| Marcar vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes o cifras | `src/lib/site.js` |
 | Cambiar colores o tipografías | `src/index.css` → bloque `@theme` |
 | Cambiar textos de la home | `src/sections/*.jsx` |
@@ -62,6 +63,30 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 | Cambiar el logo o favicon | `public/logo.png` / `public/favicon.png` (ver README §4) |
 | Cambiar la foto del hero | `public/hero.webp` |
 | Probar que nada se rompe | `npm run build && npm run smoke` |
+
+### Sincronización automática con Wallapop
+
+La Action `.github/workflows/sync-wallapop.yml` ejecuta
+`scripts/sync-wallapop.mjs` cada **30 min** (y bajo demanda desde la pestaña
+Actions → *Run workflow*):
+
+- Lee el perfil público del cliente y **solo** descarga las fichas de anuncios
+  nuevos o modificados; el resultado es `src/data/cars.generated.json`.
+- **Solo commitea si el inventario cambió** (`git diff` como gate, siempre con
+  build + smoke antes de publicar) → sin redeploys inútiles en Vercel.
+- Seguridades: 0 anuncios en el perfil → **no escribe nada** (nunca se vacía
+  la web); una ficha que falla → se conserva el snapshot anterior; error
+  general → la web se queda en el último snapshot **y GitHub envía un email
+  de aviso** al dueño del repositorio (activarle las notificaciones).
+- Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
+  desde la pestaña Actions (o dispara *Run workflow*); los commits del propio
+  sync cuentan como actividad, así que solo afectaría a un verano sin vender.
+- **Pendiente de revisión**: de momento la Action solo actualiza
+  `integracion` (previsualización). Tras el visto bueno, añadir un paso que
+  haga fast-forward de `main` para que los cambios lleguen a producción.
+- **Plan B**: si Wallapop cambia sus páginas, sustituir el scraping por un
+  actor de Apify manteniendo el mismo `cars.generated.json` — solo cambiaría
+  el script, no la web.
 
 ---
 
@@ -73,21 +98,21 @@ Lista viva ampliada en [`../README.md` §9](../README.md). Resumen:
    y `public/robots.txt` (ahora dice `https://billgarage.example`) + imagen
    `og.png` 1200×630.
 2. **Dirección y horario** en `site.js` (mejoran mapa y JSON-LD).
-3. **Fotos adicionales** de los 6 coches (interior, atrás) y **foto propia del
-   taller** para el hero (ahora hay una provisional).
+3. **Foto propia del taller** para el hero (ahora hay una provisional). Las
+   fotos de los coches ya llegan solas desde Wallapop.
 4. **Datos legales** del titular (nombre, NIF, domicilio, email) y revisión
    profesional de las 3 páginas legales.
 5. **Servicio de formularios** (Web3Forms / Netlify Forms) o dejar WhatsApp
    como canal único.
-6. **Reseñas reales** de Wallapop (pedir permiso) sustituyendo las de ejemplo.
-7. Comprobar el **contraste del logo/favicon negros** sobre el fondo `#0a0a0a`.
+6. ✅ Hecho: **reseñas reales** de Wallapop (con permiso del cliente).
+7. ✅ Hecho: logo/favicon ahora **a color** (`public/logo.png`,
+   `public/favicon.png`); los negros quedan sin uso en `public/`.
 
 ---
 
 ## 5. Limitaciones conocidas del prototipo (a propósito)
 
 - Formularios **simulados**: no envían a ningún sitio (el canal real es WhatsApp).
-- Reseñas de ejemplo y descripciones/versión/km de los coches inventados.
 - Dominio ficticio, sin dirección exacta ni horario.
 - Textos legales por completar con un profesional.
 - Sin analítica (ni cookies): si se añade, toca repensar el aviso de cookies

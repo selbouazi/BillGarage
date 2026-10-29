@@ -58,15 +58,18 @@ valuationMessage(values)     // "Hola, me gustaría una valoración…: Marca…
 
 ## 3. Fotos y assets
 
-- **Stock**: 6 fotos reales, verticales (640×853), en
-  `public/coches/<id>/1.webp`. Los marcos son 4:3, así que usan
-  `object-[center_57%]` en `CarCard` y `CarDetail` para que el coche quede
-  centrado en el recorte.
+- **Stock**: las fotos del inventario se sirven del **CDN de Wallapop**
+  (sincronizadas con el anuncio, tamaño W1024, mayoría verticales) con
+  `referrerPolicy="no-referrer"` en las etiquetas `<img>`. Los marcos son 4:3
+  y usan `object-[center_57%]` en `CarCard` y `CarDetail` para centrar el
+  coche en el recorte. Plan B si el CDN fallara: copiarlas a Cloudinary/Blob
+  (cambio localizado en `scripts/sync-wallapop.mjs`).
 - **Hero**: `public/hero.webp` (670×444, 33 KB), al 40 % de opacidad debajo de
   un degradado oscuro → el texto blanco mantiene ~13:1 de contraste.
-- **Para añadir más ángulos**: subir `2.webp`, `3.webp` y añadirlos al array
-  `fotos` del coche (ver [02-datos.md](02-datos.md)). La galería se adapta sola:
-  con 1 foto no muestra flechas ni contador.
+- **Para añadir más ángulos**: se añaden **en el anuncio de Wallapop** y el
+  siguiente sync los trae (ver [02-datos.md](02-datos.md)). La galería se
+  adapta sola: sin flechas ni contador con 1 foto; con muchas, la tira de
+  miniaturas es con scroll horizontal.
 - **Logo/favicon**: `public/logo.png` (a color, fondo transparente) y
   `public/favicon.png` (badge circular), ambos del cliente. Los originales
   `logo.svg`/`favicon.svg` (monocromos en negro) y `favicoin.png` quedan en

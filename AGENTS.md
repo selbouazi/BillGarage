@@ -27,7 +27,8 @@ npm install       # dependencias (una vez)
 npm run dev       # desarrollo → http://localhost:5173 (si está ocupado: 5174/5175…)
 npm run build     # build de producción → dist/
 npm run preview   # sirve dist/ en local
-npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
+npm run smoke     # TEST: renderiza todas las páginas en SSR y falla si algo se rompe
+npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace solo cada 30 min)
 ```
 
 **Regla: antes de dar cualquier cambio por bueno → `npm run build && npm run smoke`.**
@@ -49,7 +50,9 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
 4. **Un solo acento rojo** (`--color-accent: #e11d2e`; para texto usar
    `accent-soft`, errores `danger`). Verde `#25d366` **solo** para WhatsApp.
 5. **Sin CDNs ni librerías nuevas** sin preguntar antes (fuentes con @fontsource,
-   iconos SVG propios en `src/components/Icons.jsx`).
+   iconos SVG propios en `src/components/Icons.jsx`). Excepción ya aprobada:
+   las fotos del inventario se sirven del CDN de Wallapop con
+   `referrerPolicy="no-referrer"`.
 6. **Mobile-first** (360 → 1440) y toda animación respetando
    `prefers-reduced-motion`.
 7. **Formularios sin backend**: el envío está simulado en
@@ -67,7 +70,11 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
 | Archivo / carpeta | Para qué |
 |---|---|
 | `src/index.css` | **Tokens del diseño** (colores, tipografías, radios, `.reveal`, `.glow-hover`) |
-| `src/data/cars.js` | Inventario: los 6 coches. Añadir/quitar coches aquí |
+| `src/data/cars.js` | Adaptador del inventario (generado + overrides). **No editar a mano** |
+| `src/data/cars.generated.json` | Inventario sincronizado desde Wallapop (lo escribe el script; no editar) |
+| `src/data/cars.overrides.json` | Ajustes manuales por id de Wallapop (p. ej. marcar "vendido" a mano) |
+| `scripts/sync-wallapop.mjs` | Sincronización con el perfil público de Wallapop |
+| `.github/workflows/sync-wallapop.yml` | Action: cron 30 min, build+smoke, commit solo si cambia |
 | `src/lib/site.js` | Datos del negocio: teléfono, redes, cifras, dirección, dominio |
 | `src/data/reviews.js` | Reseñas **reales** de Wallapop (3, aportadas por el cliente) |
 | `src/lib/whatsapp.js` | Enlaces `wa.me` con mensaje prellenado |
@@ -98,7 +105,10 @@ npm run smoke     # TEST: renderiza 13 páginas en SSR y falla si algo se rompe
 
 ## Estado del proyecto (octubre 2026)
 
-- ✅ 6 coches con **foto real**; hero con foto provisional del taller.
+- ✅ Inventario **sincronizado con Wallapop** (octubre 2026: 9 coches reales
+  con ficha completa y fotos por CDN). Action cada 30 min sobre `integracion`;
+  **pendiente de revisión**: llevarlo también a `main`.
+- ✅ Hero con foto provisional del taller.
 - ✅ Logo y favicon **a color** del cliente (`public/logo.png` y
   `public/favicon.png`, fondo transparente). Los SVG negros y `favicoin.png`
   quedan en `public/` sin uso.
