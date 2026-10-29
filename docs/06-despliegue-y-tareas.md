@@ -51,7 +51,7 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 
 | Quiero… | Dónde |
 |---|---|
-| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤30 min; o ya: `npm run sync:wallapop`) |
+| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤5 min; o ya: `npm run sync:wallapop`) |
 | Marcar un coche como reservado | Botón "reservado" de Wallapop → etiqueta y CTA bloqueados |
 | Marcar vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes o cifras | `src/lib/site.js` |
@@ -67,9 +67,8 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 ### Sincronización automática con Wallapop
 
 La Action `.github/workflows/sync-wallapop.yml` ejecuta
-`scripts/sync-wallapop.mjs` cada **30 min** (en `integracion`, mientras dure
-la prueba con el perfil de prueba, está en **1 min**: ver los TODO del
-fichero) y también bajo demanda desde la pestaña Actions → *Run workflow*:
+`scripts/sync-wallapop.mjs` cada **5 min** y también al instante bajo
+demanda desde la pestaña Actions → *Run workflow*:
 
 - Lee el perfil público del cliente y **solo** descarga las fichas de anuncios
   nuevos o modificados; el resultado es `src/data/cars.generated.json`.
@@ -86,9 +85,9 @@ fichero) y también bajo demanda desde la pestaña Actions → *Run workflow*:
   fichero de la Action está también en `main` (solo el automatismo; su
   checkout y sus commits apuntan a `integracion`, la web de producción no
   cambia).
-- **Pendiente de revisión**: de momento la Action solo actualiza
-  `integracion` (previsualización). Tras el visto bueno, añadir un paso que
-  haga fast-forward de `main` para que los cambios lleguen a producción.
+- Tras cada sync la Action **publica en `main`** (push fast-forward) →
+  producción (Vercel) se actualiza sola. Si `main` diverge a mano, el push
+  falla, la Action avisa por email y se arregla uniendo ramas.
 - **Plan B**: si Wallapop cambia sus páginas, sustituir el scraping por un
   actor de Apify manteniendo el mismo `cars.generated.json` — solo cambiaría
   el script, no la web.

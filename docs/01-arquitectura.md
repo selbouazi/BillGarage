@@ -16,7 +16,7 @@ Características del prototipo:
 - **Sin backend, sin base de datos, sin servidor**: todo son archivos estáticos.
 - Los datos viven en JS plano (`src/data/`) para poder cambiarlos en 1 minuto,
   y para poder enchufar un backend real más adelante sin reescribir la interfaz.
-- El inventario se **sincroniza solo desde Wallapop** (cada 30 min; ver §5 y
+- El inventario se **sincroniza solo desde Wallapop** (cada 5 min; ver §5 y
   `docs/02-datos.md`): el cliente edita sus anuncios y la web lo refleja.
 - Todo dato inventado de relleno está marcado con `// EJEMPLO` o `// TODO`.
 
@@ -101,7 +101,7 @@ lee de los archivos de datos**.
 
 ```
   Wallapop (perfil público del cliente)
-        │   scripts/sync-wallapop.mjs · Action cada 30 min
+        │   scripts/sync-wallapop.mjs · Action cada 5 min
         ▼
         src/data/cars.generated.json ─┐   (inventario: ficha, fotos, precio)
         src/data/cars.overrides.json ─┼─► src/data/cars.js (adaptador)
@@ -114,7 +114,7 @@ lee de los archivos de datos**.
 Consecuencias prácticas:
 
 - Cambiar un dato = cambiar **un archivo**, no buscar por todo el código.
-- Añadir un coche = **subirlo en Wallapop**; la Action (≤30 min) lo trae y
+- Añadir un coche = **subirlo en Wallapop**; la Action (≤5 min) lo trae y
   los filtros, el contador, las marcas del desplegable y el JSON-LD se
   **generan solos**.
 - Sustituir por backend más adelante = exportar el mismo shape desde un módulo

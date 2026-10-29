@@ -11,7 +11,7 @@
 **El inventario ya no se edita a mano.** `scripts/sync-wallapop.mjs` lee el
 perfil **público** del cliente (<https://es.wallapop.com/user/erwanj-46555843>)
 y escribe `src/data/cars.generated.json`. La Action
-`.github/workflows/sync-wallapop.yml` lo ejecuta **cada 30 minutos**, solo
+`.github/workflows/sync-wallapop.yml` lo ejecuta **cada 5 minutos**, solo
 commitea (y por tanto Vercel redespliega) **si el inventario cambió**, y deja
 la web en el último snapshot si Wallapop falla.
 
@@ -70,7 +70,7 @@ Helpers exportados por `cars.js`:
 - `reservado` → llega del **campo "reservado" de Wallapop**; se muestra con
   etiqueta ámbar y **bloquea** el botón principal.
 - `vendido` → **no se muestra**. En Wallapop, vender/borrar el anuncio lo
-  elimina de la web en ≤30 min; para forzarlo sin borrar el anuncio, usar un
+  elimina de la web en ≤5 min; para forzarlo sin borrar el anuncio, usar un
   override en `cars.overrides.json`.
 
 ### Ejecutar la sincronización a mano
@@ -126,7 +126,7 @@ copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 
 | Quiero… | Archivo / acción |
 |---|---|
-| Añadir / editar / quitar un coche | **En Wallapop** (llega a la web en ≤30 min, o ya con `npm run sync:wallapop`) |
+| Añadir / editar / quitar un coche | **En Wallapop** (llega a la web en ≤5 min, o ya con `npm run sync:wallapop`) |
 | Marcar un coche como reservado | Botón "reservado" de Wallapop (o override `estado`) |
 | Marcar un coche como vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes, cifras, horario, dominio | `src/lib/site.js` |

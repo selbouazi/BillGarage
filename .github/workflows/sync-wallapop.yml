@@ -1,22 +1,21 @@
 # Sincroniza src/data/cars.generated.json desde el perfil público de Wallapop.
 #
-# - Cada minuto comprueba el perfil (TODO TEMPORAL para pruebas: volver a
-#   "17,47 * * * *", cada 30 min, antes de publicar); solo descarga fichas de
-#   anuncios cambiados.
+# - Cadencia: cron cada 5 min (los schedules más finos no se disparan de forma
+#   fiable en GitHub) + disparo manual instantáneo: Actions → Run workflow.
+# - Solo descarga fichas de anuncios nuevos o modificados.
 # - Solo commitea si el inventario difiere (git diff como gate) → Vercel no
-#   redespliega si no hay novedades.
+#   redespliega si no hay novedades (siempre con build + smoke antes).
+# - Tras publicar en `integracion`, sube `main` (push fast-forward) para que
+#   producción (Vercel) reciba el inventario nuevo. Si `main` llega a divergir
+#   a mano, el push falla, la Action avisa por email y se arregla uniendo ramas.
 # - Si el script falla (Wallapop caído, 0 anuncios, cambios en la página):
 #   la Action falla, la web se queda en el último snapshot y GitHub envía un
 #   email de aviso al dueño del repositorio.
-#
-# NOTA (pendiente de revisión del propietario): tras dar el OK, añadir aquí un
-# paso final de fast-forward de `main` desde `integracion` para que los cambios
-# lleguen a producción. De momento solo se actualiza `integracion` (previsualización).
 name: Sincronizar stock con Wallapop
 
 on:
   schedule:
-    - cron: "* * * * *" # TODO TEMPORAL: cada 1 min para pruebas; restaurar "17,47 * * * *" (cada 30 min) antes de publicar
+    - cron: "*/5 * * * *" # cada 5 min (mínimo fiable en GitHub); para pruebas al momento: Run workflow
   workflow_dispatch: # disparo manual desde la pestaña Actions
 
 # Nunca dos sincronizaciones a la vez
@@ -70,3 +69,7 @@ jobs:
           git add src/data/cars.generated.json
           git commit -m "feat: sincronizar stock desde Wallapop ($(date -u +%Y-%m-%dT%H:%MZ))"
           git push origin HEAD:integracion
+
+      - name: Publicar en main (produccion Vercel)
+        if: steps.diff.outputs.changed == 'true'
+        run: git push origin HEAD:main

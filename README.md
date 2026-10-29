@@ -27,7 +27,7 @@ npm run dev        # servidor de desarrollo → http://localhost:5173
 npm run build      # build de producción en dist/
 npm run preview    # ver el build de producción
 npm run smoke      # test SSR: comprueba que todas las páginas renderizan
-npm run sync:wallapop  # inventario desde Wallapop (automático cada 30 min)
+npm run sync:wallapop  # inventario desde Wallapop (automático cada 5 min)
 ```
 
 Páginas disponibles:
@@ -73,7 +73,8 @@ src/
 
 El inventario **no se edita a mano en la web**: sale del perfil público de
 Wallapop del cliente (<https://es.wallapop.com/user/erwanj-46555843>). Un
-script lo comprueba **cada 30 min** con una Action de GitHub y actualiza
+script lo comprueba **cada 5 min** con una Action de GitHub (o al instante
+desde Actions → *Run workflow*) y actualiza
 `src/data/cars.generated.json`; solo se publica si algo ha cambiado (siempre
 con build + smoke antes):
 
