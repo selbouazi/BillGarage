@@ -39,6 +39,15 @@ jobs:
         with:
           node-version: 20
 
+      # Wallapop devuelve 403 a las IP de centro de datos (la de estos
+      # runners). El script intenta el fetch directo y, si lo bloquean,
+      # reintenta con un Chromium real: aquí se instala con --no-save para
+      # no añadir dependencias al proyecto.
+      - name: Preparar navegador (reintento anti-403)
+        run: |
+          npm i --no-save playwright
+          npx playwright install --with-deps chromium
+
       - name: Sincronizar con Wallapop
         run: node scripts/sync-wallapop.mjs
 

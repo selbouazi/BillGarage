@@ -19,6 +19,9 @@
  *   - Ficha que falla o no valida → se conserva la versión anterior.
  *   - Cualquier error → exit 1 SIN escribir nada: la web queda en el último
  *     snapshot y GitHub avisa por email del fallo de la Action.
+ *   - Si Wallapop bloquea la IP (403, típico en la CI), se reintenta con un
+ *     Chromium real cuando playwright está disponible (la Action lo instala
+ *     con --no-save; local no lo necesita).
  *
  * Uso local:  node scripts/sync-wallapop.mjs   (o npm run sync:wallapop)
  * El gate de commit lo hace .github/workflows/sync-wallapop.yml con git diff.
@@ -41,13 +44,72 @@ const num = (v) => {
   return Number.isFinite(n) ? n : null;
 };
 
+const CABECERAS = {
+  "User-Agent": UA,
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+  "Cache-Control": "no-cache",
+  Pragma: "no-cache",
+  "Sec-Fetch-Dest": "document",
+  "Sec-Fetch-Mode": "navigate",
+  "Sec-Fetch-Site": "none",
+  "Sec-Fetch-User": "?1",
+  "Upgrade-Insecure-Requests": "1",
+};
+
+let navMod = null; // { chromium } si hay playwright instalado (la CI); false si no.
+
+/**
+ * Reintento con Chromium real: Wallapop responde 403 a las IP de centro de
+ * datos (p. ej. la de los runners de GitHub) aunque la petición sea legítima.
+ * Devuelve el HTML o null si no hay navegador o también está bloqueado.
+ */
+async function getConNavegador(url) {
+  if (!navMod) {
+    try {
+      navMod = await import("playwright");
+    } catch {
+      navMod = false; // uso local: no hay navegador y se propaga el error directo
+    }
+  }
+  if (!navMod) return null;
+  let br;
+  try {
+    br = await navMod.chromium.launch({ headless: true, args: ["--no-sandbox"] });
+    const ctx = await br.newContext({ userAgent: UA, locale: "es-ES" });
+    const page = await ctx.newPage();
+    const resp = await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: 45000,
+    });
+    if ((resp?.status() ?? 0) >= 400) return null; // también bloqueado
+    await page.waitForSelector("script#__NEXT_DATA__", { timeout: 25000 });
+    const html = await page.content();
+    return html.includes("__NEXT_DATA__") ? html : null;
+  } catch {
+    return null;
+  } finally {
+    await br?.close().catch(() => {});
+  }
+}
+
 async function get(url) {
-  const res = await fetch(url, {
-    headers: { "User-Agent": UA, "Accept-Language": "es-ES,es;q=0.9" },
-    redirect: "follow",
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} en ${url}`);
-  return res.text();
+  let fallo = null;
+  let reintentar = false;
+  try {
+    const res = await fetch(url, { headers: CABECERAS, redirect: "follow" });
+    if (res.ok) return res.text();
+    fallo = `HTTP ${res.status}`;
+    reintentar = res.status === 403 || res.status === 429 || res.status >= 500;
+  } catch (e) {
+    fallo = e.message;
+    reintentar = true; // error de red: mismo tratamiento
+  }
+  if (!reintentar) throw new Error(`${fallo} en ${url}`);
+  const html = await getConNavegador(url);
+  if (html) return html;
+  throw new Error(`${fallo} en ${url}`);
 }
 
 /** Extrae el objeto JSON embebido que sirve Wallapop al renderizar en servidor. */

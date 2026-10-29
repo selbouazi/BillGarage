@@ -78,13 +78,17 @@ demanda desde la pestaña Actions → *Run workflow*:
   la web); una ficha que falla → se conserva el snapshot anterior; error
   general → la web se queda en el último snapshot **y GitHub envía un email
   de aviso** al dueño del repositorio (activarle las notificaciones).
+- Wallapop contesta **403 a las IP de centro de datos** (la de los runners
+  de GitHub): el script manda cabeceras completas de navegador y, si aún así
+  lo bloquean, reintenta con un **Chromium real** (Playwright, instalado en
+  la CI con `--no-save` → el proyecto no gana dependencias). En local no hace
+  falta: la IP residencial pasa directo con el fetch normal.
 - Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
   desde la pestaña Actions (o dispara *Run workflow*); los commits del propio
   sync cuentan como actividad, así que solo afectaría a un verano sin vender.
 - GitHub solo dispara los cron que existan en la **rama por defecto**: el
-  fichero de la Action está también en `main` (solo el automatismo; su
-  checkout y sus commits apuntan a `integracion`, la web de producción no
-  cambia).
+  fichero de la Action vive también en `main`, aunque su checkout y sus
+  commits apuntan a `integracion`.
 - Tras cada sync la Action **publica en `main`** (push fast-forward) →
   producción (Vercel) se actualiza sola. Si `main` diverge a mano, el push
   falla, la Action avisa por email y se arregla uniendo ramas.
