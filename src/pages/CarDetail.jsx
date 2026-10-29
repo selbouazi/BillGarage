@@ -24,27 +24,27 @@ const STATE_LABEL = {
   vendido: { tone: "vendido", text: "Vendido" },
 };
 
-/** Ficha técnica — pares etiqueta/valor. */
+/** Ficha técnica — pares etiqueta/valor; los campos ausentes no se muestran. */
 function specsOf(car) {
   return [
     ["Marca", car.marca],
     ["Modelo", car.modelo],
     ["Versión", car.version],
     ["Año", car.año],
-    ["Kilómetros", `${car.km.toLocaleString("es-ES")} km`],
+    ["Kilómetros", car.km != null ? `${Number(car.km).toLocaleString("es-ES")} km` : null],
     ["Combustible", car.combustible],
     ["Cambio", car.cambio],
-    ["Potencia", `${car.cv} CV`],
-    ["Cilindrada", `${car.cc} cm³`],
+    ["Potencia", car.cv != null ? `${car.cv} CV` : null],
+    ["Cilindrada", car.cc ? `${car.cc} cm³` : null],
     ["Carrocería", car.carroceria],
     ["Puertas", car.puertas],
     ["Plazas", car.plazas],
     ["Color", car.color],
     ["Etiqueta ambiental", car.etiqueta],
-    ...(car.propietarios ? [["Propietarios", car.propietarios]] : []),
-    ...(car.itvHasta ? [["ITV hasta", car.itvHasta]] : []),
+    ["Propietarios", car.propietarios],
+    ["ITV hasta", car.itvHasta],
     // TODO: garantiaMeses → mostrar solo cuando el cliente confirme la garantía
-  ];
+  ].filter(([, v]) => v != null && v !== "");
 }
 
 /** Ficha completa del coche: galería, técnica, descripción y relacionados. */
@@ -67,7 +67,7 @@ export default function CarDetail() {
         fuelType: car.combustible,
         vehicleTransmission: car.cambio,
         vehicleEngine: { "@type": "EngineSpecification", enginePower: { "@type": "QuantitativeValue", value: car.cv, unitCode: "N12" } },
-        image: car.fotos.map((f) => SITE.url + f),
+        image: car.fotos.map((f) => (f.startsWith("http") ? f : SITE.url + f)),
         url: `${SITE.url}/coches/${car.id}`,
         offers: {
           "@type": "Offer",
@@ -182,6 +182,8 @@ export default function CarDetail() {
                       alt={`${car.marca} ${car.modelo} ${car.año} — fotografía ${index + 1} de ${fotos.length}`}
                       width={1200}
                       height={900}
+                      decoding="async"
+                      referrerPolicy="no-referrer"
                       onError={() => setImgFailed(true)}
                       className="h-full w-full object-cover object-[center_57%]"
                     />
@@ -213,7 +215,7 @@ export default function CarDetail() {
                 </div>
 
                 {fotos.length > 1 && (
-                  <figcaption className="flex gap-2 border-t border-border p-3">
+                  <figcaption className="flex gap-2 overflow-x-auto border-t border-border p-3">
                     {fotos.map((foto, i) => (
                       <button
                         key={foto}
@@ -233,6 +235,8 @@ export default function CarDetail() {
                           width={1200}
                           height={900}
                           loading="lazy"
+                          decoding="async"
+                          referrerPolicy="no-referrer"
                           className="h-full w-full object-cover object-[center_57%]"
                         />
                       </button>
@@ -249,7 +253,7 @@ export default function CarDetail() {
                   Descripción
                 </h2>
                 <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
-                <p className="mt-4 leading-relaxed text-text-muted">{car.descripcion}</p>
+                <p className="mt-4 whitespace-pre-line leading-relaxed text-text-muted">{car.descripcion}</p>
               </section>
             </Reveal>
 
@@ -343,6 +347,18 @@ export default function CarDetail() {
                     <IconPhone className="h-5 w-5" />
                     Llamar al {PHONE_DISPLAY}
                   </Button>
+                  {car.wallapopUrl && (
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      href={car.wallapopUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconTag className="h-5 w-5" />
+                      Ver anuncio en Wallapop
+                    </Button>
+                  )}
                   <Button size="lg" as={Link} to="/#entrega">
                     <IconTag className="h-5 w-5" />
                     Tasar mi coche

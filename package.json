@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "smoke": "vite build --ssr scripts/smoke.jsx --outDir .smoke --emptyOutDir && node .smoke/smoke.js"
+    "smoke": "vite build --ssr scripts/smoke.jsx --outDir .smoke --emptyOutDir && node .smoke/smoke.js",
+    "sync:wallapop": "node scripts/sync-wallapop.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.2.5",

@@ -40,6 +40,7 @@ export default function CarCard({ car }) {
           height={900}
           loading="lazy"
           decoding="async"
+          referrerPolicy="no-referrer"
           className="h-full w-full object-cover object-[center_57%] transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
