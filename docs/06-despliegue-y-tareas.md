@@ -67,8 +67,9 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 ### Sincronización automática con Wallapop
 
 La Action `.github/workflows/sync-wallapop.yml` ejecuta
-`scripts/sync-wallapop.mjs` cada **30 min** (y bajo demanda desde la pestaña
-Actions → *Run workflow*):
+`scripts/sync-wallapop.mjs` cada **30 min** (en `integracion`, mientras dure
+la prueba con el perfil de prueba, está en **1 min**: ver los TODO del
+fichero) y también bajo demanda desde la pestaña Actions → *Run workflow*:
 
 - Lee el perfil público del cliente y **solo** descarga las fichas de anuncios
   nuevos o modificados; el resultado es `src/data/cars.generated.json`.
@@ -81,6 +82,10 @@ Actions → *Run workflow*):
 - Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
   desde la pestaña Actions (o dispara *Run workflow*); los commits del propio
   sync cuentan como actividad, así que solo afectaría a un verano sin vender.
+- GitHub solo dispara los cron que existan en la **rama por defecto**: el
+  fichero de la Action está también en `main` (solo el automatismo; su
+  checkout y sus commits apuntan a `integracion`, la web de producción no
+  cambia).
 - **Pendiente de revisión**: de momento la Action solo actualiza
   `integracion` (previsualización). Tras el visto bueno, añadir un paso que
   haga fast-forward de `main` para que los cambios lleguen a producción.

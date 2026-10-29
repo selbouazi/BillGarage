@@ -1,6 +1,8 @@
 # Sincroniza src/data/cars.generated.json desde el perfil público de Wallapop.
 #
-# - Cada 30 min comprueba el perfil; solo descarga fichas de anuncios cambiados.
+# - Cada minuto comprueba el perfil (TODO TEMPORAL para pruebas: volver a
+#   "17,47 * * * *", cada 30 min, antes de publicar); solo descarga fichas de
+#   anuncios cambiados.
 # - Solo commitea si el inventario difiere (git diff como gate) → Vercel no
 #   redespliega si no hay novedades.
 # - Si el script falla (Wallapop caído, 0 anuncios, cambios en la página):
@@ -14,7 +16,7 @@ name: Sincronizar stock con Wallapop
 
 on:
   schedule:
-    - cron: "17,47 * * * *" # cada 30 min (minutos poco usados)
+    - cron: "* * * * *" # TODO TEMPORAL: cada 1 min para pruebas; restaurar "17,47 * * * *" (cada 30 min) antes de publicar
   workflow_dispatch: # disparo manual desde la pestaña Actions
 
 # Nunca dos sincronizaciones a la vez

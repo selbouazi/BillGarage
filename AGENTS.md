@@ -105,9 +105,11 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace solo cada 
 
 ## Estado del proyecto (octubre 2026)
 
-- ✅ Inventario **sincronizado con Wallapop** (octubre 2026: 9 coches reales
-  con ficha completa y fotos por CDN). Action cada 30 min sobre `integracion`;
-  **pendiente de revisión**: llevarlo también a `main`.
+- ✅ Inventario **sincronizado con Wallapop** (ahora: perfil de prueba
+  `soulaimanee-434683562` y cron de 1 min; volver al cliente y a 30 min antes
+  de publicar). La Action corre sobre `integracion`; su fichero vive también
+  en `main` porque GitHub lee los cron de la rama por defecto (no toca la web
+  de producción).
 - ✅ Hero con foto provisional del taller.
 - ✅ Logo y favicon **a color** del cliente (`public/logo.png` y
   `public/favicon.png`, fondo transparente). Los SVG negros y `favicoin.png`
