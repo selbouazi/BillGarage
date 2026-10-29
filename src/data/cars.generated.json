@@ -1,8 +1,37 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-10-29T12:28:43.636Z",
+  "generatedAt": "2026-10-29T12:43:00.474Z",
   "cars": [
+    {
+      "id": "bmw-i3-2021-1318445746",
+      "wallapopId": "8z88mpmn5rz3",
+      "wallapopUrl": "https://es.wallapop.com/item/bmw-i3-2021-1318445746",
+      "f": "5ebf6a09f376",
+      "marca": "BMW",
+      "modelo": "i3",
+      "version": "i01 170 42,2kWh 5p Aut",
+      "año": 2021,
+      "km": 250965,
+      "combustible": "Gasolina",
+      "cambio": "Automático",
+      "cv": 170,
+      "carroceria": "Pequeño",
+      "puertas": 5,
+      "plazas": 4,
+      "etiqueta": "C",
+      "precio": 30000,
+      "estado": "disponible",
+      "destacado": true,
+      "fotos": [
+        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103040.jpg?pictureSize=W1024",
+        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103048.jpg?pictureSize=W1024",
+        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103053.jpg?pictureSize=W1024"
+      ],
+      "equipamiento": [],
+      "descripcion": "Dkfkldñd",
+      "wallapopTitle": "BMW i3 2021"
+    },
     {
       "id": "seat-ibiza-2006-1318443088",
       "wallapopId": "v6gp939v556e",
