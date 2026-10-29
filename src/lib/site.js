@@ -29,8 +29,11 @@ export const SITE = {
   tiktok: "https://www.tiktok.com/@bill.garage_",
   tiktokHandle: "@bill.garage_",
   // Dato real facilitado por el cliente (perfil Wallapop "Bill G.")
-  wallapop: "https://es.wallapop.com/user/erwanj-46555843",
-  wallapopHandle: "Bill G.",
+  // TODO(TEMPORAL): perfil de PRUEBA del propietario del repositorio.
+  // Antes de publicar, volver al perfil del cliente: erwanj-46555843 ("Bill G.")
+  // y regenerar con `npm run sync:wallapop`.
+  wallapop: "https://es.wallapop.com/user/soulaimanee-434683562",
+  wallapopHandle: "Soulaimanee",
 
   // Reputación (datos reales del negocio)
   rating: 4.9,
