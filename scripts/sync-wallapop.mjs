@@ -84,7 +84,10 @@ async function getConNavegador(url) {
       timeout: 45000,
     });
     if ((resp?.status() ?? 0) >= 400) return null; // también bloqueado
-    await page.waitForSelector("script#__NEXT_DATA__", { timeout: 25000 });
+    await page.waitForSelector("script#__NEXT_DATA__", {
+      timeout: 25000,
+      state: "attached", // un <script> nunca es "visible": el estado por defecto colgaría
+    });
     const html = await page.content();
     return html.includes("__NEXT_DATA__") ? html : null;
   } catch {
