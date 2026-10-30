@@ -71,6 +71,7 @@ async function getConNavegador(url) {
       navMod = await import("playwright");
     } catch {
       navMod = false; // uso local: no hay navegador y se propaga el error directo
+      console.error("[sync] navegador: playwright no está instalado");
     }
   }
   if (!navMod) return null;
@@ -83,14 +84,23 @@ async function getConNavegador(url) {
       waitUntil: "domcontentloaded",
       timeout: 45000,
     });
-    if ((resp?.status() ?? 0) >= 400) return null; // también bloqueado
+    const status = resp?.status() ?? 0;
+    if (status >= 400) {
+      console.error(`[sync] navegador: HTTP ${status} en ${url}`);
+      return null;
+    }
     await page.waitForSelector("script#__NEXT_DATA__", {
       timeout: 25000,
       state: "attached", // un <script> nunca es "visible": el estado por defecto colgaría
     });
     const html = await page.content();
-    return html.includes("__NEXT_DATA__") ? html : null;
-  } catch {
+    if (!html.includes("__NEXT_DATA__")) {
+      console.error(`[sync] navegador: el HTML de ${url} no contiene __NEXT_DATA__`);
+      return null;
+    }
+    return html;
+  } catch (e) {
+    console.error(`[sync] navegador: ${String(e.message).slice(0, 200)}`);
     return null;
   } finally {
     await br?.close().catch(() => {});
@@ -110,6 +120,7 @@ async function get(url) {
     reintentar = true; // error de red: mismo tratamiento
   }
   if (!reintentar) throw new Error(`${fallo} en ${url}`);
+  console.error(`[sync] fetch directo falló (${fallo}); reintento con navegador…`);
   const html = await getConNavegador(url);
   if (html) return html;
   throw new Error(`${fallo} en ${url}`);
