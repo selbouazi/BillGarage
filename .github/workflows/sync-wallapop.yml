@@ -15,7 +15,7 @@ name: Sincronizar stock con Wallapop
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # cada 5 min (mínimo fiable en GitHub); para pruebas al momento: Run workflow
+    - cron: "*/1000 * * * *" # cada 1000 min (mínimo fiable en GitHub); para pruebas al momento: Run workflow
   workflow_dispatch: # disparo manual desde la pestaña Actions
 
 # Nunca dos sincronizaciones a la vez
