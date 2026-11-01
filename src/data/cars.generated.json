@@ -1,18 +1,18 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-11-01T13:48:04.835Z",
+  "generatedAt": "2026-11-01T13:52:30.588Z",
   "cars": [
     {
       "id": "seat-ibiza-2006-1318443088",
       "wallapopId": "v6gp939v556e",
       "wallapopUrl": "https://es.wallapop.com/item/seat-ibiza-2006-1318443088",
-      "f": "a94fa84de28b",
+      "f": "574baa4de350",
       "marca": "SEAT",
       "modelo": "Ibiza",
       "version": "1.4 TDI 70 Reference 5p",
       "año": 2006,
-      "km": 258053,
+      "km": 290000,
       "combustible": "Diésel",
       "cambio": "Manual",
       "cv": 70,
@@ -20,7 +20,7 @@
       "puertas": 5,
       "plazas": 5,
       "etiqueta": "B",
-      "precio": 2600,
+      "precio": 3000,
       "estado": "disponible",
       "destacado": true,
       "fotos": [
@@ -28,7 +28,7 @@
         "https://cdn.wallapop.com/images/10420/ls/yt/__/c10420p1318443088/i6828083219.jpg?pictureSize=W1024"
       ],
       "equipamiento": [],
-      "descripcion": "Hxjdkd",
+      "descripcion": "Bxnxjxkxkx",
       "wallapopTitle": "SEAT Ibiza 2006"
     }
   ]
