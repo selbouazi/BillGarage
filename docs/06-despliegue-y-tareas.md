@@ -86,7 +86,8 @@ desde la pestaña Actions → *Run workflow*:
   secretos del repo: `WALLAPOP_BASE` (URL del Worker) y `WALLAPOP_BASE_TOKEN`.
   Si la pasarela falla, el script cae al fetch directo: en local no hace falta
   ninguna de las dos variables.
-- Cadencia: **cada hora**. GitHub no garantiza nada más fino que 5 minutos, y
+- Cadencia: **cada hora, en el minuto 17** (los cron de la hora en punto se
+  retrasan por congestión). GitHub no garantiza nada más fino que 5 minutos, y
   para un stock de coches cada 5 min es innecesario (y más expuesto a que nos
   limiten).
 - Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
