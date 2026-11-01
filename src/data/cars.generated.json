@@ -1,42 +1,13 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-10-29T12:57:32.388Z",
+  "generatedAt": "2026-11-01T13:48:04.835Z",
   "cars": [
-    {
-      "id": "bmw-i3-2021-1318445746",
-      "wallapopId": "8z88mpmn5rz3",
-      "wallapopUrl": "https://es.wallapop.com/item/bmw-i3-2021-1318445746",
-      "f": "f92669e41d33",
-      "marca": "BMW",
-      "modelo": "i3",
-      "version": "i01 170 42,2kWh 5p Aut",
-      "año": 2021,
-      "km": 250965,
-      "combustible": "Híbrido",
-      "cambio": "Semiautomático",
-      "cv": 170,
-      "carroceria": "Pequeño",
-      "puertas": 5,
-      "plazas": 4,
-      "etiqueta": "C",
-      "precio": 39000,
-      "estado": "disponible",
-      "destacado": true,
-      "fotos": [
-        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103040.jpg?pictureSize=W1024",
-        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103048.jpg?pictureSize=W1024",
-        "https://cdn.wallapop.com/images/10420/ls/yv/__/c10420p1318445746/i6828103053.jpg?pictureSize=W1024"
-      ],
-      "equipamiento": [],
-      "descripcion": "Jdjfkfkdi",
-      "wallapopTitle": "BMW i3 2021"
-    },
     {
       "id": "seat-ibiza-2006-1318443088",
       "wallapopId": "v6gp939v556e",
       "wallapopUrl": "https://es.wallapop.com/item/seat-ibiza-2006-1318443088",
-      "f": "3f7bd495ce93",
+      "f": "a94fa84de28b",
       "marca": "SEAT",
       "modelo": "Ibiza",
       "version": "1.4 TDI 70 Reference 5p",
@@ -49,7 +20,7 @@
       "puertas": 5,
       "plazas": 5,
       "etiqueta": "B",
-      "precio": 2500,
+      "precio": 2600,
       "estado": "disponible",
       "destacado": true,
       "fotos": [
