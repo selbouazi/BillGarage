@@ -51,7 +51,7 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 
 | Quiero… | Dónde |
 |---|---|
-| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤1 h; o ya: `npm run sync:wallapop`) |
+| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤30 min; o ya: `npm run sync:wallapop`) |
 | Marcar un coche como reservado | Botón "reservado" de Wallapop → etiqueta y CTA bloqueados |
 | Marcar vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes o cifras | `src/lib/site.js` |
@@ -67,7 +67,7 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 ### Sincronización automática con Wallapop
 
 La Action `.github/workflows/sync-wallapop.yml` ejecuta
-`scripts/sync-wallapop.mjs` **cada hora** y también al instante bajo demanda
+`scripts/sync-wallapop.mjs` **cada 30 minutos** y también al instante bajo demanda
 desde la pestaña Actions → *Run workflow*:
 
 - Lee el perfil público del cliente y **solo** descarga las fichas de anuncios
@@ -86,10 +86,12 @@ desde la pestaña Actions → *Run workflow*:
   secretos del repo: `WALLAPOP_BASE` (URL del Worker) y `WALLAPOP_BASE_TOKEN`.
   Si la pasarela falla, el script cae al fetch directo: en local no hace falta
   ninguna de las dos variables.
-- Cadencia: **cada hora, en el minuto 17** (los cron de la hora en punto se
-  retrasan por congestión). GitHub no garantiza nada más fino que 5 minutos, y
-  para un stock de coches cada 5 min es innecesario (y más expuesto a que nos
-  limiten).
+- Cadencia: **cada 30 minutos** (minutos 13 y 43; los cron de la hora en punto
+  y del :30 se retrasan por congestión de GitHub). GitHub no garantiza nada más
+  fino que 5 minutos y puede añadir algún retraso. Coste 0: Actions es gratis
+  en repos públicos y el Worker usa ~0,1 % de las 100.000 peticiones diarias
+  del plan gratuito. El volumen para Wallapop (48 visitas/día a un perfil
+  público, sin login) es insignificante.
 - Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
   desde la pestaña Actions (o dispara *Run workflow*); los commits del propio
   sync cuentan como actividad, así que solo afectaría a un verano sin vender.

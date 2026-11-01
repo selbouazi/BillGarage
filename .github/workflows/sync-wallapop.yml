@@ -20,9 +20,10 @@ name: Sincronizar stock con Wallapop
 
 on:
   schedule:
-    # Minuto 17, no :00: GitHub retrasa los cron de la hora en punto por
-    # congestión (a veces 15-30 min). Cada hora sigue siendo suficiente.
-    - cron: "17 * * * *"
+    # Cada 30 min, en los minutos 13 y 43: los cron de la hora en punto (y :30)
+    # se retrasan por congestión en GitHub. Coste 0 (Actions es gratis en
+    # repos públicos; el Worker usa ~0,1 % de las 100.000 req/día del free tier).
+    - cron: "13,43 * * * *"
   workflow_dispatch: # disparo manual desde la pestaña Actions
 
 # Nunca dos sincronizaciones a la vez

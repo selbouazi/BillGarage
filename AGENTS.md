@@ -28,7 +28,7 @@ npm run dev       # desarrollo → http://localhost:5173 (si está ocupado: 5174
 npm run build     # build de producción → dist/
 npm run preview   # sirve dist/ en local
 npm run smoke     # TEST: renderiza todas las páginas en SSR y falla si algo se rompe
-npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada hora)
+npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 30 min)
 ```
 
 **Regla: antes de dar cualquier cambio por bueno → `npm run build && npm run smoke`.**
@@ -108,7 +108,7 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 
 - ✅ Inventario **sincronizado con Wallapop** (ahora: perfil de prueba
   `soulaimanee-434683562` — volver al cliente antes de publicar). Cadencia
-  horaria + disparo al instante (Run workflow); commitea en `integracion` y
+  cada 30 min + disparo al instante (Run workflow); commitea en `integracion` y
   **sube `main`** (producción Vercel). El fichero vive también en `main`
   porque GitHub lee los cron de la rama por defecto. La descarga pasa por un
   **Cloudflare Worker** (`experiments/wallapop-proxy/`) porque Wallapop
