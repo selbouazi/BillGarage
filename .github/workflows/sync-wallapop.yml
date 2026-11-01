@@ -85,9 +85,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin integracion
+          # El commit va ANTES del pull: cars.generated.json está modificado sin
+          # registrar y `pull --rebase` se niega a trabajar así (fallaba con
+          # "cannot pull with rebase: You have unstaged changes").
           git add src/data/cars.generated.json
           git commit -m "feat: sincronizar stock desde Wallapop ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git pull --rebase origin integracion
           git push origin HEAD:integracion
 
       - name: Publicar en main (produccion Vercel)
