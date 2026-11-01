@@ -1,0 +1,16 @@
+// experiments/wallapop-proxy/wrangler.toml — opcional (solo si despliegas por CLI)
+//
+// Por panel web NO necesitas este archivo: Cloudflare → Workers & Pages →
+// Create → Worker → pegas el contenido de worker.js → Deploy.
+//
+// Por CLI (requiere `npx wrangler login`, que abre el navegador):
+//   npx wrangler deploy --config experiments/wallapop-proxy/wrangler.toml
+
+name = "billgarage-wallapop"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Sin cron: el Worker solo responde cuando la Action (o tú) lo llama.
+# Si el experimento sale bien, aquí se podría añadir un cron de Cloudflare
+# en lugar del de GitHub, pero para eso hace falta un KV/almacén que guarde
+# el JSON: complica el montaje. Ver README.

@@ -1,7 +1,12 @@
 # Sincroniza src/data/cars.generated.json desde el perfil público de Wallapop.
 #
-# - Cadencia: cron cada 5 min (los schedules más finos no se disparan de forma
-#   fiable en GitHub) + disparo manual instantáneo: Actions → Run workflow.
+# - Cadencia: 1 vez por hora (GitHub no garantiza nada más fino que 5 min, y
+#   cada 5 min es innecesario para un stock de coches) + disparo manual:
+#   Actions → Run workflow.
+# - La petición la hace un Cloudflare Worker (código en
+#   experiments/wallapop-proxy): los runners salen por EE. UU. y Wallapop les
+#   responde 403, mientras que desde Madrid responde 200. Secretos del repo:
+#   WALLAPOP_BASE (URL del Worker) y WALLAPOP_BASE_TOKEN.
 # - Solo descarga fichas de anuncios nuevos o modificados.
 # - Solo commitea si el inventario difiere (git diff como gate) → Vercel no
 #   redespliega si no hay novedades (siempre con build + smoke antes).
@@ -15,7 +20,7 @@ name: Sincronizar stock con Wallapop
 
 on:
   schedule:
-    - cron: "*/1000 * * * *" # cada 1000 min (mínimo fiable en GitHub); para pruebas al momento: Run workflow
+    - cron: "0 * * * *" # cada hora; para pruebas al momento: Run workflow
   workflow_dispatch: # disparo manual desde la pestaña Actions
 
 # Nunca dos sincronizaciones a la vez
@@ -39,16 +44,22 @@ jobs:
         with:
           node-version: 20
 
-      # Wallapop devuelve 403 a las IP de centro de datos (la de estos
-      # runners). El script intenta el fetch directo y, si lo bloquean,
-      # reintenta con un Chromium real: aquí se instala con --no-save para
-      # no añadir dependencias al proyecto.
-      - name: Preparar navegador (reintento anti-403)
+      # Si falta el secreto, el script caería al fetch directo desde la IP del
+      # runner y fallaría con un 403 confuso. Mejor avisar aquí y claro.
+      - name: Comprobar secretos de la pasarela
+        env:
+          WALLAPOP_BASE: ${{ secrets.WALLAPOP_BASE }}
+          WALLAPOP_BASE_TOKEN: ${{ secrets.WALLAPOP_BASE_TOKEN }}
         run: |
-          npm i --no-save playwright
-          npx playwright install --with-deps chromium
+          if [ -z "$WALLAPOP_BASE" ] || [ -z "$WALLAPOP_BASE_TOKEN" ]; then
+            echo "::error::Faltan los secretos WALLAPOP_BASE y/o WALLAPOP_BASE_TOKEN (ver experiments/wallapop-proxy/README.md)."
+            exit 1
+          fi
 
       - name: Sincronizar con Wallapop
+        env:
+          WALLAPOP_BASE: ${{ secrets.WALLAPOP_BASE }}
+          WALLAPOP_BASE_TOKEN: ${{ secrets.WALLAPOP_BASE_TOKEN }}
         run: node scripts/sync-wallapop.mjs
 
       - name: Comprobar si hay cambios

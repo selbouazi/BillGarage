@@ -51,7 +51,7 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 
 | Quiero… | Dónde |
 |---|---|
-| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤5 min; o ya: `npm run sync:wallapop`) |
+| Añadir, editar o quitar un coche | **En Wallapop** (llega solo en ≤1 h; o ya: `npm run sync:wallapop`) |
 | Marcar un coche como reservado | Botón "reservado" de Wallapop → etiqueta y CTA bloqueados |
 | Marcar vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes o cifras | `src/lib/site.js` |
@@ -67,8 +67,8 @@ profunda (`/coches/seat-leon-2013`) y el favicon.
 ### Sincronización automática con Wallapop
 
 La Action `.github/workflows/sync-wallapop.yml` ejecuta
-`scripts/sync-wallapop.mjs` cada **5 min** y también al instante bajo
-demanda desde la pestaña Actions → *Run workflow*:
+`scripts/sync-wallapop.mjs` **cada hora** y también al instante bajo demanda
+desde la pestaña Actions → *Run workflow*:
 
 - Lee el perfil público del cliente y **solo** descarga las fichas de anuncios
   nuevos o modificados; el resultado es `src/data/cars.generated.json`.
@@ -78,11 +78,17 @@ demanda desde la pestaña Actions → *Run workflow*:
   la web); una ficha que falla → se conserva el snapshot anterior; error
   general → la web se queda en el último snapshot **y GitHub envía un email
   de aviso** al dueño del repositorio (activarle las notificaciones).
-- Wallapop contesta **403 a las IP de centro de datos** (la de los runners
-  de GitHub): el script manda cabeceras completas de navegador y, si aún así
-  lo bloquean, reintenta con un **Chromium real** (Playwright, instalado en
-  la CI con `--no-save` → el proyecto no gana dependencias). En local no hace
-  falta: la IP residencial pasa directo con el fetch normal.
+- **Por qué hay una pasarela**: Wallapop contesta **403 a las IP de centro de
+  datos**. Comprobado: los runners de GitHub (EE. UU.) reciben 403 incluso con
+  un Chromium real; en cambio una IP residencial española y la de un
+  **Cloudflare Worker en Madrid** reciben 200. Por eso la petición pasa por un
+  Worker (código y explicación en `experiments/wallapop-proxy/`), con dos
+  secretos del repo: `WALLAPOP_BASE` (URL del Worker) y `WALLAPOP_BASE_TOKEN`.
+  Si la pasarela falla, el script cae al fetch directo: en local no hace falta
+  ninguna de las dos variables.
+- Cadencia: **cada hora**. GitHub no garantiza nada más fino que 5 minutos, y
+  para un stock de coches cada 5 min es innecesario (y más expuesto a que nos
+  limiten).
 - Si GitHub pausa las crons tras 60 días sin actividad del repo, se reactivan
   desde la pestaña Actions (o dispara *Run workflow*); los commits del propio
   sync cuentan como actividad, así que solo afectaría a un verano sin vender.
@@ -94,7 +100,9 @@ demanda desde la pestaña Actions → *Run workflow*:
   falla, la Action avisa por email y se arregla uniendo ramas.
 - **Plan B**: si Wallapop cambia sus páginas, sustituir el scraping por un
   actor de Apify manteniendo el mismo `cars.generated.json` — solo cambiaría
-  el script, no la web.
+  el script, no la web. Si cae el Worker, se recrea en 10 minutos con el
+  código de `experiments/wallapop-proxy/worker.js` y se actualiza el secreto
+  `WALLAPOP_BASE`.
 
 ---
 

@@ -28,7 +28,7 @@ npm run dev       # desarrollo → http://localhost:5173 (si está ocupado: 5174
 npm run build     # build de producción → dist/
 npm run preview   # sirve dist/ en local
 npm run smoke     # TEST: renderiza todas las páginas en SSR y falla si algo se rompe
-npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 5 min)
+npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada hora)
 ```
 
 **Regla: antes de dar cualquier cambio por bueno → `npm run build && npm run smoke`.**
@@ -74,7 +74,8 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 | `src/data/cars.generated.json` | Inventario sincronizado desde Wallapop (lo escribe el script; no editar) |
 | `src/data/cars.overrides.json` | Ajustes manuales por id de Wallapop (p. ej. marcar "vendido" a mano) |
 | `scripts/sync-wallapop.mjs` | Sincronización con el perfil público de Wallapop |
-| `.github/workflows/sync-wallapop.yml` | Action: cron 5 min, build+smoke, commit solo si cambia, publica en `main` |
+| `.github/workflows/sync-wallapop.yml` | Action: cron horario, build+smoke, commit solo si cambia, publica en `main` |
+| `experiments/wallapop-proxy/` | Worker de Cloudflare que evita el 403 de los runners (no entra en el build) |
 | `src/lib/site.js` | Datos del negocio: teléfono, redes, cifras, dirección, dominio |
 | `src/data/reviews.js` | Reseñas **reales** de Wallapop (3, aportadas por el cliente) |
 | `src/lib/whatsapp.js` | Enlaces `wa.me` con mensaje prellenado |
@@ -107,9 +108,12 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 
 - ✅ Inventario **sincronizado con Wallapop** (ahora: perfil de prueba
   `soulaimanee-434683562` — volver al cliente antes de publicar). Cadencia
-  5 min + disparo al instante (Run workflow); commitea en `integracion` y
+  horaria + disparo al instante (Run workflow); commitea en `integracion` y
   **sube `main`** (producción Vercel). El fichero vive también en `main`
-  porque GitHub lee los cron de la rama por defecto.
+  porque GitHub lee los cron de la rama por defecto. La descarga pasa por un
+  **Cloudflare Worker** (`experiments/wallapop-proxy/`) porque Wallapop
+  responde 403 a las IP de los runners; secretos `WALLAPOP_BASE` y
+  `WALLAPOP_BASE_TOKEN`.
 - ✅ Hero con foto provisional del taller.
 - ✅ Logo y favicon **a color** del cliente (`public/logo.png` y
   `public/favicon.png`, fondo transparente). Los SVG negros y `favicoin.png`

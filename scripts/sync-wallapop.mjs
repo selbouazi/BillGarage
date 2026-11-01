@@ -19,9 +19,11 @@
  *   - Ficha que falla o no valida → se conserva la versión anterior.
  *   - Cualquier error → exit 1 SIN escribir nada: la web queda en el último
  *     snapshot y GitHub avisa por email del fallo de la Action.
- *   - Si Wallapop bloquea la IP (403, típico en la CI), se reintenta con un
- *     Chromium real cuando playwright está disponible (la Action lo instala
- *     con --no-save; local no lo necesita).
+ *   - En la CI la petición pasa por una pasarela (Cloudflare Worker, código en
+ *     experiments/wallapop-proxy): los runners salen por EE. UU. y Wallapop les
+ *     responde 403, mientras que desde Madrid responde 200. Se activa con
+ *     WALLAPOP_BASE + WALLAPOP_BASE_TOKEN; si la pasarela falla, se cae al
+ *     fetch directo y, si hay playwright instalado, a un Chromium real.
  *
  * Uso local:  node scripts/sync-wallapop.mjs   (o npm run sync:wallapop)
  * El gate de commit lo hace .github/workflows/sync-wallapop.yml con git diff.
@@ -59,6 +61,7 @@ const CABECERAS = {
 };
 
 let navMod = null; // { chromium } si hay playwright instalado (la CI); false si no.
+let pasarelaAnunciada = false; // log único: evita repetir "[sync] pasarela" por petición
 
 /**
  * Reintento con Chromium real: Wallapop responde 403 a las IP de centro de
@@ -107,7 +110,49 @@ async function getConNavegador(url) {
   }
 }
 
+/**
+ * Pasarela opcional (Cloudflare Worker, ver experiments/wallapop-proxy).
+ *
+ * Motivo: GitHub Actions sale por IP estadounidense y Wallapop responde 403;
+ * desde Madrid (Cloudflare) responde 200 con el mismo fetch. Si las variables
+ * WALLAPOP_BASE / WALLAPOP_BASE_TOKEN existen, se intenta primero aquí.
+ * Devuelve el HTML o null (entonces se sigue con el fetch directo de siempre).
+ */
+async function getViaPasarela(url) {
+  const base = process.env.WALLAPOP_BASE?.trim().replace(/\/+$/, "");
+  if (!base) return null;
+  const token = process.env.WALLAPOP_BASE_TOKEN?.trim();
+  const u = new URL(url);
+  const destino =
+    `${base}${u.pathname}${u.search}` +
+    (token ? `${u.search ? "&" : "?"}k=${encodeURIComponent(token)}` : "");
+
+  try {
+    const res = await fetch(destino, { redirect: "follow" });
+    if (!res.ok) {
+      console.error(`[sync] pasarela: HTTP ${res.status} en ${u.pathname}`);
+      return null;
+    }
+    const html = await res.text();
+    if (!html.includes("__NEXT_DATA__")) {
+      console.error(`[sync] pasarela: respuesta sin __NEXT_DATA__ en ${u.pathname}`);
+      return null;
+    }
+    if (!pasarelaAnunciada) {
+      console.log(`[sync] pasarela: OK (${base})`);
+      pasarelaAnunciada = true;
+    }
+    return html;
+  } catch (e) {
+    console.error(`[sync] pasarela: ${String(e.message).slice(0, 160)}`);
+    return null;
+  }
+}
+
 async function get(url) {
+  const viaPasarela = await getViaPasarela(url);
+  if (viaPasarela) return viaPasarela;
+
   let fallo = null;
   let reintentar = false;
   try {

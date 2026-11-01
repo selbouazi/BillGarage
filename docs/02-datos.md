@@ -11,9 +11,11 @@
 **El inventario ya no se edita a mano.** `scripts/sync-wallapop.mjs` lee el
 perfil **público** del cliente (<https://es.wallapop.com/user/erwanj-46555843>)
 y escribe `src/data/cars.generated.json`. La Action
-`.github/workflows/sync-wallapop.yml` lo ejecuta **cada 5 minutos**, solo
+`.github/workflows/sync-wallapop.yml` lo ejecuta **cada hora**, solo
 commitea (y por tanto Vercel redespliega) **si el inventario cambió**, y deja
-la web en el último snapshot si Wallapop falla.
+la web en el último snapshot si Wallapop falla. En la CI la descarga pasa por
+un Cloudflare Worker (`experiments/wallapop-proxy/`) porque Wallapop responde
+403 a las IP de los runners; ver [06-despliegue-y-tareas.md](06-despliegue-y-tareas.md).
 
 | Fichero | Quién lo toca | Qué lleva |
 |---|---|---|
@@ -126,7 +128,7 @@ copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 
 | Quiero… | Archivo / acción |
 |---|---|
-| Añadir / editar / quitar un coche | **En Wallapop** (llega a la web en ≤5 min, o ya con `npm run sync:wallapop`) |
+| Añadir / editar / quitar un coche | **En Wallapop** (llega a la web en ≤1 h, o ya con `npm run sync:wallapop`) |
 | Marcar un coche como reservado | Botón "reservado" de Wallapop (o override `estado`) |
 | Marcar un coche como vendido sin borrar el anuncio | `src/data/cars.overrides.json` → `{"id": "…", "estado": "vendido"}` |
 | Cambiar teléfono, redes, cifras, horario, dominio | `src/lib/site.js` |
