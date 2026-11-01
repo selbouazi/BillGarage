@@ -1,7 +1,7 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-11-01T13:56:56.172Z",
+  "generatedAt": "2026-11-01T13:59:12.094Z",
   "cars": [
     {
       "id": "opel-corsa-2019-1319402869",
@@ -30,34 +30,6 @@
       "equipamiento": [],
       "descripcion": "Ydudjdjsk",
       "wallapopTitle": "Opel Corsa 2019"
-    },
-    {
-      "id": "seat-ibiza-2006-1318443088",
-      "wallapopId": "v6gp939v556e",
-      "wallapopUrl": "https://es.wallapop.com/item/seat-ibiza-2006-1318443088",
-      "f": "574baa4de350",
-      "marca": "SEAT",
-      "modelo": "Ibiza",
-      "version": "1.4 TDI 70 Reference 5p",
-      "año": 2006,
-      "km": 290000,
-      "combustible": "Diésel",
-      "cambio": "Manual",
-      "cv": 70,
-      "carroceria": "Pequeño",
-      "puertas": 5,
-      "plazas": 5,
-      "etiqueta": "B",
-      "precio": 3000,
-      "estado": "disponible",
-      "destacado": true,
-      "fotos": [
-        "https://cdn.wallapop.com/images/10420/ls/yt/__/c10420p1318443088/i6828083209.jpg?pictureSize=W1024",
-        "https://cdn.wallapop.com/images/10420/ls/yt/__/c10420p1318443088/i6828083219.jpg?pictureSize=W1024"
-      ],
-      "equipamiento": [],
-      "descripcion": "Bxnxjxkxkx",
-      "wallapopTitle": "SEAT Ibiza 2006"
     }
   ]
 }
