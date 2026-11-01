@@ -101,6 +101,12 @@ desde la pestaña Actions → *Run workflow*:
 - Tras cada sync la Action **publica en `main`** (push fast-forward) →
   producción (Vercel) se actualiza sola. Si `main` diverge a mano, el push
   falla, la Action avisa por email y se arregla uniendo ramas.
+- **Vigilancia**: `.github/workflows/watchdog-sync.yml` (cada 3 h) mira la
+  fecha de la última ejecución del sync y, si pasan **más de 10 h**, abre un
+  Issue `[vigilante]` (al crearlo, GitHub manda email); cuando el sync vuelve
+  a ejecutarse, lo cierra solo. No vigila si el stock cambia ni si una
+  ejecución suelta falla: para eso ya está el email de GitHub. Se ejecuta a
+  mano con *Run workflow* para comprobar que ve el sync vivo.
 - **Plan B**: si Wallapop cambia sus páginas, sustituir el scraping por un
   actor de Apify manteniendo el mismo `cars.generated.json` — solo cambiaría
   el script, no la web. Si cae el Worker, se recrea en 10 minutos con el

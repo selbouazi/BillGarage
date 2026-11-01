@@ -1,0 +1,44 @@
+# Vigilante del sync de Wallapop.
+#
+# Avisa si el sync deja de EJECUTARSE: mira la fecha de la última ejecución
+# registrada y, si han pasado más de 10 h, abre un Issue (GitHub envía email
+# al abrirlo). Cuando el sync vuelve a ejecutarse, el Issue se cierra solo.
+#
+# No mide si el stock cambió (es normal que no cambie) ni si una ejecución
+# suelta falló (de eso ya avisa GitHub por email).
+#
+# Cada 3 h → un parón de 10 h se detecta en 10-13 h.
+# Límite conocido: si GitHub desactiva todos los cron del repo (60 días sin
+# actividad), este vigilante también se queda callado.
+name: Vigilante del sync
+
+on:
+  schedule:
+    - cron: "37 */3 * * *" # cada 3 h, en el minuto 37
+  workflow_dispatch:
+
+permissions:
+  contents: read # actions/checkout
+  actions: read # leer las ejecuciones del sync
+  issues: write # abrir / cerrar el aviso
+
+concurrency:
+  group: vigilante-sync
+  cancel-in-progress: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Comprobar la última ejecución del sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          UMBRAL_HORAS: "10"
+        run: node scripts/watchdog-sync.mjs

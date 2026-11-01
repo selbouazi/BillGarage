@@ -74,7 +74,9 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 | `src/data/cars.generated.json` | Inventario sincronizado desde Wallapop (lo escribe el script; no editar) |
 | `src/data/cars.overrides.json` | Ajustes manuales por id de Wallapop (p. ej. marcar "vendido" a mano) |
 | `scripts/sync-wallapop.mjs` | Sincronización con el perfil público de Wallapop |
-| `.github/workflows/sync-wallapop.yml` | Action: cron horario, build+smoke, commit solo si cambia, publica en `main` |
+| `.github/workflows/sync-wallapop.yml` | Action: cron cada 30 min, build+smoke, commit solo si cambia, publica en `main` |
+| `.github/workflows/watchdog-sync.yml` | Avisa por Issue si el sync lleva >10 h sin ejecutarse |
+| `scripts/watchdog-sync.mjs` | Lógica del vigilante (lanzable a mano con *Run workflow*) |
 | `experiments/wallapop-proxy/` | Worker de Cloudflare que evita el 403 de los runners (no entra en el build) |
 | `src/lib/site.js` | Datos del negocio: teléfono, redes, cifras, dirección, dominio |
 | `src/data/reviews.js` | Reseñas **reales** de Wallapop (3, aportadas por el cliente) |
