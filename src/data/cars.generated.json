@@ -1,8 +1,36 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-11-01T13:52:30.588Z",
+  "generatedAt": "2026-11-01T13:56:56.172Z",
   "cars": [
+    {
+      "id": "opel-corsa-2019-1319402869",
+      "wallapopId": "3zlmqw3qopjx",
+      "wallapopUrl": "https://es.wallapop.com/item/opel-corsa-2019-1319402869",
+      "f": "242cf1f5a1b5",
+      "marca": "Opel",
+      "modelo": "Corsa",
+      "version": "1.2T 100 Edition 5p S/S",
+      "año": 2019,
+      "km": 0,
+      "combustible": "Gasolina",
+      "cambio": "Manual",
+      "cv": 102,
+      "carroceria": "Pequeño",
+      "puertas": 5,
+      "plazas": 5,
+      "etiqueta": "C",
+      "precio": 10000,
+      "estado": "disponible",
+      "destacado": true,
+      "fotos": [
+        "https://cdn.wallapop.com/images/10420/lt/jd/__/c10420p1319402869/i6833719591.jpg?pictureSize=W1024",
+        "https://cdn.wallapop.com/images/10420/lt/jd/__/c10420p1319402869/i6833719613.jpg?pictureSize=W1024"
+      ],
+      "equipamiento": [],
+      "descripcion": "Ydudjdjsk",
+      "wallapopTitle": "Opel Corsa 2019"
+    },
     {
       "id": "seat-ibiza-2006-1318443088",
       "wallapopId": "v6gp939v556e",
