@@ -108,7 +108,7 @@ export default {
       const paisPeticion = request.cf?.country ?? null;
 
       const probes = [];
-      for (const p of ["/", "/user/soulaimanee-434683562"]) {
+      for (const p of ["/", "/user/erwanj-46555843"]) {
         const x = await upstream(p);
         const { body, ...rest } = x;
         probes.push(rest);

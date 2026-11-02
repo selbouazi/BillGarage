@@ -108,8 +108,8 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 
 ## Estado del proyecto (octubre 2026)
 
-- ✅ Inventario **sincronizado con Wallapop** (ahora: perfil de prueba
-  `soulaimanee-434683562` — volver al cliente antes de publicar). Cadencia
+- ✅ Inventario **sincronizado con Wallapop** (perfil del cliente
+  `erwanj-46555843`, «Bill G.»). Cadencia
   cada 30 min + disparo al instante (Run workflow); commitea en `integracion` y
   **sube `main`** (producción Vercel). El fichero vive también en `main`
   porque GitHub lee los cron de la rama por defecto. La descarga pasa por un
