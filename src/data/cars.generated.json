@@ -1,13 +1,13 @@
 {
   "fuente": "https://es.wallapop.com/user/soulaimanee-434683562",
   "generadoPor": "scripts/sync-wallapop.mjs",
-  "generatedAt": "2026-11-01T23:07:38.450Z",
+  "generatedAt": "2026-11-02T11:19:40.088Z",
   "cars": [
     {
       "id": "opel-corsa-2019-1319402869",
       "wallapopId": "3zlmqw3qopjx",
       "wallapopUrl": "https://es.wallapop.com/item/opel-corsa-2019-1319402869",
-      "f": "a6d5aa986428",
+      "f": "1e2296e93645",
       "marca": "Opel",
       "modelo": "Corsa",
       "version": "1.2T 100 Edition 5p S/S",
@@ -20,7 +20,7 @@
       "puertas": 5,
       "plazas": 5,
       "etiqueta": "C",
-      "precio": 11000,
+      "precio": 11500,
       "estado": "disponible",
       "destacado": true,
       "fotos": [
