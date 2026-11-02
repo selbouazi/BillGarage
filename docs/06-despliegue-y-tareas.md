@@ -113,6 +113,54 @@ desde la pestaña Actions → *Run workflow*:
   código de `experiments/wallapop-proxy/worker.js` y se actualiza el secreto
   `WALLAPOP_BASE`.
 
+#### Disparador externo (opcional): puntualidad garantizada
+
+GitHub ejecuta los `schedule` como *best-effort*: retrasa y descarta disparos
+(observado aquí: **4 ejecuciones reales en 16 h** con un cron teórico de 32).
+Si se necesita cadencia puntual, se lanza el workflow **desde fuera** por API;
+el cron de GitHub se queda de respaldo y el `concurrency` evita solapamientos.
+
+1. **Token de GitHub** (una vez): Settings → Developer settings →
+   *Fine-grained tokens* → *Generate new token*.
+   - *Repository access*: *Only select repositories* → `BillGarage`.
+   - *Permissions* → **Actions: Read and write** (nada más).
+   - Caducidad: 90 días (rotarlo al vencer).
+   - Copiar el token (`github_pat_…`). **No se guarda en el repo**: solo en el
+     servicio de cron.
+
+2. **Job en cron-job.org** (gratis): cuenta → *Create cronjob*.
+   - URL:
+     `https://api.github.com/repos/selbouazi/BillGarage/actions/workflows/sync-wallapop.yml/dispatches`
+   - *Request method*: **POST**.
+   - *Headers*: `Accept: application/vnd.github+json`,
+     `Authorization: Bearer github_pat_…`,
+     `X-GitHub-Api-Version: 2022-11-28`,
+     `Content-Type: application/json`.
+   - *Body*: `{"ref":"main"}`.
+   - *Schedule* (modo experto): `5,35 * * * *` — cada 30 min, desfasado de los
+     :13/:43 de GitHub y de la hora en punto (que es cuando más se congestiona
+     el planificador).
+   - Activar y *Test run*: debe responder **204** (sin cuerpo).
+
+3. **Comprobar**: en GitHub → Actions aparece una ejecución con evento
+   *workflow_dispatch* (actor: el dueño del token) y el paso *Comprobar
+   secretos de la pasarela* en verde.
+
+4. **Mantenimiento**: si el token caduca (401), no habrá ejecuciones y el
+   vigilante abrirá un Issue a las 10 h → aviso. Rotar = generar otro token y
+   actualizarlo en cron-job.org. Si el servicio externo cae, el cron de GitHub
+   sigue funcionando con sus retrasos.
+
+Probar el token a mano (PowerShell, sin cron-job.org):
+
+```powershell
+$env:GH_PAT = "github_pat_..."
+Invoke-RestMethod -Method Post `
+  -Uri "https://api.github.com/repos/selbouazi/BillGarage/actions/workflows/sync-wallapop.yml/dispatches" `
+  -Headers @{ Authorization = "Bearer $env:GH_PAT"; Accept = "application/vnd.github+json"; "X-GitHub-Api-Version" = "2022-11-28" } `
+  -ContentType "application/json" -Body '{"ref":"main"}'
+```
+
 ---
 
 ## 4. Pendientes antes de publicar

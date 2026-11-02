@@ -115,7 +115,8 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
   porque GitHub lee los cron de la rama por defecto. La descarga pasa por un
   **Cloudflare Worker** (`experiments/wallapop-proxy/`) porque Wallapop
   responde 403 a las IP de los runners; secretos `WALLAPOP_BASE` y
-  `WALLAPOP_BASE_TOKEN`.
+  `WALLAPOP_BASE_TOKEN`. Si se necesita cadencia puntual, ver el *disparador
+  externo* de [`docs/06`](docs/06-despliegue-y-tareas.md).
 - ✅ Hero con foto provisional del taller.
 - ✅ Logo y favicon **a color** del cliente (`public/logo.png` y
   `public/favicon.png`, fondo transparente). Los SVG negros y `favicoin.png`
