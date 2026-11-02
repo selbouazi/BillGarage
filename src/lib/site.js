@@ -12,6 +12,9 @@ export const SITE = {
   phoneDisplay: PHONE_DISPLAY,
   phoneTel: PHONE_TEL,
   whatsappPhone: WHATSAPP_PHONE,
+  // TODO: email del negocio — obligatorio en el aviso legal (LSSI art. 10)
+  // y para ejercer los derechos de protección de datos (RGPD).
+  email: "",
 
   // Ubicación (dato real: zona conocida, dirección exacta pendiente)
   city: "El Vendrell",
@@ -46,6 +49,24 @@ export const SITE = {
   directions:
     "https://www.google.com/maps/dir/?api=1&destination=La%20Papiola%2C%20El%20Vendrell%2C%20Tarragona",
 };
+
+/**
+ * Datos del titular para las páginas legales (LSSI art. 10 y RGPD art. 13).
+ * TODO: rellenar con los datos reales del cliente y revisar con un profesional.
+ * Mientras falte alguno, las páginas legales muestran el aviso de "plantilla"
+ * (ver `LEGAL_READY`) y la web se mantiene fuera de los buscadores.
+ */
+export const LEGAL = {
+  titular: "", // EJEMPLO: "Nombre y apellidos" o "Razón social, S.L."
+  nif: "", // EJEMPLO: "00000000A" / "B00000000"
+  domicilio: "", // TODO: calle, número, código postal y localidad
+  updated: "", // TODO: fecha de revisión, ej. "octubre 2026"
+};
+
+/** true cuando el titular está identificado → desaparece el aviso de plantilla. */
+export const LEGAL_READY = Boolean(
+  LEGAL.titular && LEGAL.nif && LEGAL.domicilio && SITE.email,
+);
 
 /** Navegación de la cabecera (anclas sobre la home). */
 export const NAV_LINKS = [

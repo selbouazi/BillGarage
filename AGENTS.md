@@ -124,6 +124,11 @@ npm run sync:wallapop  # inventario desde Wallapop (la Action lo hace sola cada 
 - ✅ Perfil de Wallapop real en hero, opiniones, redes, footer y JSON-LD.
 - ⚠️ Formularios **simulados**; el canal real de contacto es WhatsApp
   (612 276 847).
+- 🧾 **Textos legales completos** (aviso, privacidad y cookies) pero **sin
+  datos del titular**: se rellenan en `site.js` (`LEGAL` y `SITE.email`); el
+  aviso de plantilla desaparece solo (`LEGAL_READY`). La web está en
+  **`noindex`** (meta + `robots.txt`) hasta publicar. Detalle en
+  [`docs/05`](docs/05-integraciones.md) §5.
 - ⛔ **Antes de publicar**: dominio ficticio `https://billgarage.example`,
-  dirección/horario sin confirmar, textos legales sin completar, falta `og.png`
-  → lista completa en [`README.md` §9](README.md).
+  dirección/horario sin confirmar, datos del titular y revisión legal, quitar
+  `noindex`, falta `og.png` → lista completa en [`README.md` §9](README.md).

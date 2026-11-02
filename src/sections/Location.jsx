@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Container from "@/components/Container.jsx";
 import SectionTitle from "@/components/SectionTitle.jsx";
 import Reveal from "@/components/Reveal.jsx";
@@ -5,8 +6,16 @@ import Button from "@/components/Button.jsx";
 import { IconPin, IconClock, IconPhone } from "@/components/Icons.jsx";
 import { SITE } from "@/lib/site.js";
 
-/** "Dónde estamos": mapa incrustado + datos de ubicación (Bloque 7). */
+/**
+ * "Dónde estamos": mapa + datos de ubicación (Bloque 7).
+ *
+ * El mapa se carga SOLO al pulsar "Ver mapa" (patrón "clic para cargar"): así
+ * la página no instala cookies de Google y la política de cookies puede decir
+ * la verdad (sin cookies). Ver docs/05 §4.
+ */
 export default function Location() {
+  const [mapLoaded, setMapLoaded] = useState(false);
+
   return (
     <section aria-labelledby="ubicacion-title" className="border-t border-border bg-surface py-20 sm:py-24">
       <Container>
@@ -18,14 +27,33 @@ export default function Location() {
           {/* Mapa — TODO: sustituir la consulta por la dirección exacta cuando
               el cliente la confirme (SITE.mapEmbed / SITE.directions) */}
           <Reveal>
-            <div className="overflow-hidden rounded-card border border-border bg-surface-2">
-              <iframe
-                src={SITE.mapEmbed}
-                title={`Mapa de Bill Garage en ${SITE.zone}, ${SITE.city}`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-72 w-full border-0 sm:h-96 lg:h-full lg:min-h-[24rem]"
-              />
+            <div className="h-72 overflow-hidden rounded-card border border-border bg-surface-2 sm:h-96 lg:h-full lg:min-h-[24rem]">
+              {mapLoaded ? (
+                <iframe
+                  src={SITE.mapEmbed}
+                  title={`Mapa de Bill Garage en ${SITE.zone}, ${SITE.city}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="h-full w-full border-0"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setMapLoaded(true)}
+                  className="group flex h-full w-full flex-col items-center justify-center gap-4 px-6 text-center transition-colors hover:bg-surface"
+                >
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-surface text-accent-soft transition-colors group-hover:border-accent/60">
+                    <IconPin className="h-7 w-7" />
+                  </span>
+                  <span className="text-lg font-semibold text-text">Ver mapa</span>
+                  <span className="max-w-xs text-sm text-text-muted">
+                    {SITE.zone}, {SITE.city} ({SITE.province})
+                  </span>
+                  <span className="max-w-xs text-xs text-text-muted/80">
+                    El mapa se carga desde Google Maps solo cuando lo pides.
+                  </span>
+                </button>
+              )}
             </div>
           </Reveal>
 

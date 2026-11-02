@@ -1,8 +1,13 @@
 import Container from "@/components/Container.jsx";
 import SectionTitle from "@/components/SectionTitle.jsx";
 import { useSeo } from "@/lib/seo.js";
+import { LEGAL, LEGAL_READY } from "@/lib/site.js";
 
-/** Contenedor compartido de las páginas legales (Bloque 8). */
+/**
+ * Contenedor compartido de las páginas legales (Bloque 8).
+ * El aviso de plantilla desaparece solo cuando `LEGAL_READY` es true, es decir,
+ * cuando `site.js` tiene titular, NIF, domicilio y email (ver docs/05 §6).
+ */
 export default function LegalLayout({ title, description, children }) {
   useSeo({ title: `${title} — Bill Garage`, description });
 
@@ -11,22 +16,27 @@ export default function LegalLayout({ title, description, children }) {
       <Container className="max-w-3xl">
         <SectionTitle eyebrow="Legal" title={title} italic />
 
-        {/* Aviso visible: son textos de plantilla */}
-        <div
-          role="note"
-          className="mb-8 rounded-card border border-accent/40 bg-accent/10 p-4 text-sm"
-        >
-          <strong className="font-semibold text-accent-soft">
-            Texto orientativo:
-          </strong>{" "}
-          esta página es una plantilla para el prototipo y debe ser revisada por
-          un profesional (abogado/graduado en Derecho) antes de publicarse. Los
-          datos del titular están pendientes.
-        </div>
+        {!LEGAL_READY && (
+          <div
+            role="note"
+            className="mb-8 rounded-card border border-accent/40 bg-accent/10 p-4 text-sm"
+          >
+            <strong className="font-semibold text-accent-soft">
+              Texto orientativo:
+            </strong>{" "}
+            faltan los datos del titular (nombre, NIF, domicilio y email) y la
+            revisión de un profesional antes de publicar.
+          </div>
+        )}
 
         <div className="space-y-8 text-sm leading-relaxed text-text-muted [&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:text-text [&_strong]:text-text">
           {children}
         </div>
+
+        <p className="mt-12 border-t border-border pt-6 text-xs text-text-muted/80">
+          Última actualización:{" "}
+          {LEGAL.updated || "pendiente de confirmar"}
+        </p>
       </Container>
     </main>
   );

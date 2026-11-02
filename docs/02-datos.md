@@ -120,7 +120,7 @@ copiar el texto tal cual con su autor y fecha relativa ("Hace 1 mes").
 | Inventario completo sincronizado de Wallapop: marca, modelo, versión, año, km, motor, cambio, CV, etiqueta, carrocería, puertas, plazas, precio, estado, fotos, descripción, equipamiento, ITV, garantía | — |
 | Teléfono, Instagram, TikTok, Wallapop | Dominio, dirección exacta, horario |
 | 4,9★ · 67 valoraciones · +70 ventas · 3 reseñas reales de Wallapop | — |
-| Logo y favicon | Textos legales (nombre, NIF, domicilio) |
+| Logo y favicon | Textos legales (titular, NIF, domicilio y email — se rellenan en `site.js`: `LEGAL` y `SITE.email`) |
 
 ---
 

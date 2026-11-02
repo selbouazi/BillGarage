@@ -92,6 +92,33 @@ valuationMessage(values)     // "Hola, me gustaría una valoración…: Marca…
   **hay que sustituirlo** en `index.html`, `src/lib/site.js`,
   `public/sitemap.xml` y `public/robots.txt` antes de publicar.
 - Falta crear la imagen `og.png` (1200×630) para las tarjetas de compartir.
+- ⚠️ **Prototipo**: `index.html` lleva `noindex, nofollow` y `robots.txt` está
+  cerrado (`Disallow: /`). Al publicar: quitar el meta, abrir `robots.txt` y
+  poner el dominio real.
+
+---
+
+## 5. Cookies, mapa y textos legales
+
+- **Sin cookies**: la web no tiene analítica ni publicidad y no instala cookies
+  propias. El mapa de Google **no se carga al abrir la página**: `Location.jsx`
+  muestra una fachada con el botón «Ver mapa» y solo entonces inserta el
+  `<iframe>` (patrón *click-to-load*). Así la política de cookies puede decir
+  la verdad y **no hace falta banner de consentimiento** (LSSI art. 22.2).
+  Si algún día se añade analítica, habrá que añadir banner y actualizar la
+  política.
+- **Textos legales** (`src/pages/legal/content.jsx`): aviso legal (LSSI art.
+  10), política de privacidad (RGPD/LOPDGDD: finalidades, bases, plazos,
+  encargados, transferencias, derechos) y política de cookies. Cubren también
+  la información de garantías de consumo (TRLGDCU).
+- **Datos del titular centralizados** en `src/lib/site.js`:
+  - `LEGAL.titular`, `LEGAL.nif`, `LEGAL.domicilio`, `LEGAL.updated`
+  - `SITE.email`
+  Mientras falte alguno, `LEGAL_READY` es `false` y `LegalLayout` muestra el
+  aviso de "texto orientativo". Al rellenarlos desaparece solo (no hay que
+  tocar el JSX).
+- **Pendiente antes de publicar**: rellenar esos datos, poner la fecha de
+  revisión y que un profesional valide los tres textos.
 
 Anterior: [← 04-diseno.md](04-diseno.md) ·
 Siguiente: [06-despliegue-y-tareas.md →](06-despliegue-y-tareas.md)

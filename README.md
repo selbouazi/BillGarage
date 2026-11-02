@@ -225,15 +225,22 @@ En ambos casos queda también el botón **"Enviar por WhatsApp"**, que sí funci
 - **Logo**: ✅ resuelto — la web usa el logo **a color** del cliente
   (`public/logo.png` + `public/favicon.png`, fondo transparente). Los SVG
   monocromos y `favicoin.png` quedan en `public/` sin uso (§4).
-- **Legales** (`src/pages/legal/content.jsx`): nombre, NIF, domicilio y email
-  del titular; finalidades del tratamiento; fecha de revisión. Revisar con un
-  profesional antes de publicar.
+- **Legales** (`src/pages/legal/content.jsx` + `src/lib/site.js` → `LEGAL` y
+  `SITE.email`): faltan **titular, NIF, domicilio y email**. Mientras falte
+  alguno, las páginas muestran el aviso de "texto orientativo" y la web está en
+  `noindex`; al rellenarlos el aviso desaparece solo (`LEGAL_READY`). Falta
+  también la fecha de revisión (`LEGAL.updated`) y la revisión de un
+  profesional. Los textos ya cubren LSSI, RGPD y garantías de consumo.
 - **SEO** (`index.html`, `sitemap.xml`, `robots.txt`): dominio real, horario y
   dirección en el JSON-LD, imagen Open Graph.
-- **Cookies**: la web no usa cookies propias no esenciales (sin analítica ni
-  publicidad). El iframe de Google Maps **sí** puede instalar cookies de
-  tercero: valorar añadir aviso o cambiar a un mapa sin cookies
-  (`src/pages/legal/content.jsx`).
+- **Publicación**: quitar el `<meta name="robots" content="noindex">` de
+  `index.html` y abrir `public/robots.txt` (`Disallow: /` → `Allow: /`).
+- **Cookies**: la web **no usa cookies** propias ni de terceros. El mapa de
+  Google solo se carga al pulsar «Ver mapa» (fachada en `Location.jsx`), así
+  que no hace falta banner de consentimiento.
+- **Formularios**: siguen **simulados** (`simulateSubmit`) y muestran "mensaje
+  enviado" sin enviar nada. Antes de publicar: conectarlos de verdad (ver
+  `docs/05` §1) o marcar claramente que la web es una demo.
 
 ### EJEMPLO — datos de relleno (ficticios)
 

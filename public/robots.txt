@@ -1,7 +1,11 @@
 # robots.txt — Bill Garage
+# TODO(publicación): mientras sea el prototipo (datos de prueba y textos
+# legales pendientes) la web queda cerrada a los buscadores. Antes de publicar:
+#   - cambiar "Disallow: /" por "Allow: /" y el Disallow de /sistema-diseno
+#   - quitar el <meta name="robots" content="noindex"> de index.html
+#   - sustituir el dominio ficticio del sitemap
 User-agent: *
-Allow: /
-Disallow: /sistema-diseno
+Disallow: /
 
 # TODO: sustituir por el dominio real
 Sitemap: https://billgarage.example/sitemap.xml

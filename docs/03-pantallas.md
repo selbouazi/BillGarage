@@ -40,7 +40,7 @@ Orden exacto de las 9 secciones:
 | 5 | **Opiniones** (`Reviews.jsx`) | Cifra 4,9★ + botón "Ver perfil en Wallapop" + 3 reseñas | Reseñas **reales** de Wallapop |
 | 6 | **Estadísticas** (`Stats.jsx`) | +70 ventas · 4,9★/67 valoraciones · marcas en stock | La 3ª cifra se **calcula** de `cars.js` |
 | 7 | **Redes** (`Social.jsx`) | 3 tarjetas: Instagram, TikTok, Wallapop | Todas abren en pestaña nueva |
-| 8 | **Dónde estamos** (`Location.jsx`) | iframe de Google Maps + horario + "cómo llegar" | El horario saldrá cuando `SITE.schedule` tenga valor |
+| 8 | **Dónde estamos** (`Location.jsx`) | Mapa con fachada «Ver mapa» (el iframe de Google solo se carga al pulsar) + horario + "cómo llegar" | El horario saldrá cuando `SITE.schedule` tenga valor |
 | 9 | **Contacto** (`Contact.jsx`) | Formulario + tarjetas de teléfono, WhatsApp y horario | Validación + envío simulado |
 
 Para añadir una sección: crear el archivo en `src/sections/` y montarlo en el
@@ -78,11 +78,20 @@ desplegables se derivan de los propios coches.
 ## 5. Páginas legales (`src/pages/legal/`)
 
 `/aviso-legal`, `/politica-privacidad` y `/politica-cookies`, montadas sobre un
-`LegalLayout` común (cabecera, contenido, fecha de revisión).
+`LegalLayout` común (cabecera, contenido y fecha de revisión).
 
-**Son plantillas con un aviso visible de "texto orientativo"**: hay que
-completarlas con el asesor legal y los datos reales del titular (nombre, NIF,
-domicilio, email) en `src/pages/legal/content.jsx`.
+Los textos están **completos** (LSSI, RGPD/LOPDGDD y garantías de consumo) y los
+datos del titular viven en `src/lib/site.js`:
+
+- `LEGAL.titular`, `LEGAL.nif`, `LEGAL.domicilio`, `LEGAL.updated`
+- `SITE.email`
+
+Mientras falte alguno, `LEGAL_READY` es `false` y aparece el aviso de "texto
+orientativo" en las tres páginas. **Al rellenarlos desaparece solo** y la fecha
+de revisión se muestra al pie. Queda pendiente la validación por un profesional.
+
+La política de cookies es real: la web **no instala cookies** y el mapa de Google
+solo se carga al pulsar «Ver mapa» (ver §4 del mapa y `docs/05` §5).
 
 ---
 
