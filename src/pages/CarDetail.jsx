@@ -24,6 +24,9 @@ const STATE_LABEL = {
   vendido: { tone: "vendido", text: "Vendido" },
 };
 
+/** A partir de estos caracteres la descripción se muestra plegada en móvil. */
+const DESC_PLEGADA = 420;
+
 /** Ficha técnica — pares etiqueta/valor; los campos ausentes no se muestran. */
 function specsOf(car) {
   return [
@@ -53,6 +56,7 @@ export default function CarDetail() {
   const car = getCarById(id);
   const [index, setIndex] = useState(0);
   const [imgFailed, setImgFailed] = useState(false);
+  const [descOpen, setDescOpen] = useState(false);
   const touchX = useRef(null);
 
   const jsonLd = car
@@ -94,10 +98,11 @@ export default function CarDetail() {
     jsonLd,
   });
 
-  // Reinicia la galería al cambiar de coche
+  // Reinicia la galería y la descripción al cambiar de coche
   useEffect(() => {
     setIndex(0);
     setImgFailed(false);
+    setDescOpen(false);
   }, [id]);
 
   if (!car) return <NotFound />;
@@ -106,6 +111,9 @@ export default function CarDetail() {
   const estado = STATE_LABEL[car.estado] ?? STATE_LABEL.disponible;
   const fotos = car.fotos;
   const go = (dir) => setIndex((i) => (i + dir + fotos.length) % fotos.length);
+
+  const descripcion = car.descripcion || "";
+  const descLarga = descripcion.length > DESC_PLEGADA;
 
   // "Otros coches": primero los de precio parecido
   const relacionados = getAvailableCars()
@@ -158,9 +166,16 @@ export default function CarDetail() {
           </ol>
         </nav>
 
+        {/*
+          Orden en móvil: galería → panel de compra → descripción/ficha/equipo.
+          Así el nombre, el precio y los botones quedan a la vista nada más
+          entrar, sin tener que bajar toda la descripción (que puede ser muy
+          larga). En escritorio: galería + ficha a la izquierda y panel sticky
+          a la derecha.
+        */}
         <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-          {/* Izquierda: galería + descripción */}
-          <div>
+          {/* Galería */}
+          <div className="min-w-0">
             <Reveal>
               <figure
                 className="overflow-hidden rounded-card border border-border bg-surface-2"
@@ -245,70 +260,10 @@ export default function CarDetail() {
                 )}
               </figure>
             </Reveal>
-
-            {/* Descripción */}
-            <Reveal delay={60}>
-              <section className="mt-8" aria-labelledby="desc-title">
-                <h2 id="desc-title" className="text-3xl">
-                  Descripción
-                </h2>
-                <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
-                <p className="mt-4 whitespace-pre-line leading-relaxed text-text-muted">{car.descripcion}</p>
-              </section>
-            </Reveal>
-
-            {/* Ficha técnica */}
-            <Reveal delay={90}>
-              <section className="mt-10" aria-labelledby="ficha-title">
-                <h2 id="ficha-title" className="text-3xl">
-                  Ficha técnica
-                </h2>
-                <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
-                <dl className="mt-5 grid gap-px overflow-hidden rounded-card border border-border bg-border sm:grid-cols-2">
-                  {specsOf(car).map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="flex items-center justify-between gap-4 bg-surface px-4 py-3 text-sm"
-                    >
-                      <dt className="text-text-muted">{label}</dt>
-                      <dd className="font-semibold">
-                        {label === "Etiqueta ambiental" ? (
-                          <Badge tone="neutral">{value}</Badge>
-                        ) : (
-                          value
-                        )}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            </Reveal>
-
-            {/* Equipamiento */}
-            {car.equipamiento?.length > 0 && (
-              <Reveal delay={120}>
-                <section className="mt-10" aria-labelledby="equip-title">
-                  <h2 id="equip-title" className="text-3xl">
-                    Equipamiento
-                  </h2>
-                  <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
-                  <ul className="mt-5 flex flex-wrap gap-2.5">
-                    {car.equipamiento.map((item) => (
-                      <li
-                        key={item}
-                        className="rounded-pill border border-border bg-surface-2 px-4 py-1.5 text-sm text-text-muted"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              </Reveal>
-            )}
           </div>
 
-          {/* Derecha: panel de compra (sticky) */}
-          <div>
+          {/* Panel de compra (sticky en escritorio; en móvil, tras la galería) */}
+          <div className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <Reveal delay={60}>
               <aside className="rounded-card border border-border bg-surface p-6 lg:sticky lg:top-28">
                 <div className="flex flex-wrap items-center gap-2">
@@ -316,14 +271,14 @@ export default function CarDetail() {
                   {car.destacado && <Badge tone="accent">Destacado</Badge>}
                 </div>
 
-                <h1 className="mt-3 text-4xl sm:text-5xl">
+                <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl">
                   {car.marca} {car.modelo}
                 </h1>
                 <p className="mt-1 text-text-muted">
                   {car.version} · {car.año}
                 </p>
 
-                <p className="mt-5 font-display text-5xl leading-none text-accent-soft sm:text-6xl">
+                <p className="mt-5 font-display text-4xl leading-none text-accent-soft sm:text-5xl lg:text-6xl">
                   {car.precio.toLocaleString("es-ES")} €
                 </p>
 
@@ -379,12 +334,93 @@ export default function CarDetail() {
               </aside>
             </Reveal>
           </div>
+
+          {/* Descripción, ficha técnica y equipamiento */}
+          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+            {/* Descripción */}
+            <Reveal delay={60}>
+              <section aria-labelledby="desc-title">
+                <h2 id="desc-title" className="text-2xl sm:text-3xl">
+                  Descripción
+                </h2>
+                <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
+                <p
+                  id="desc-text"
+                  className={`mt-4 whitespace-pre-line break-words text-[15px] leading-relaxed text-text-muted sm:text-base ${
+                    descLarga && !descOpen ? "line-clamp-[10]" : ""
+                  }`}
+                >
+                  {descripcion}
+                </p>
+                {descLarga && (
+                  <button
+                    type="button"
+                    onClick={() => setDescOpen((v) => !v)}
+                    aria-expanded={descOpen}
+                    aria-controls="desc-text"
+                    className="mt-3 inline-flex items-center rounded-pill border border-border bg-surface-2 px-4 py-1.5 text-sm text-text transition-colors hover:border-accent/60 hover:text-accent-soft"
+                  >
+                    {descOpen ? "Leer menos" : "Leer más"}
+                  </button>
+                )}
+              </section>
+            </Reveal>
+
+            {/* Ficha técnica */}
+            <Reveal delay={90}>
+              <section className="mt-10" aria-labelledby="ficha-title">
+                <h2 id="ficha-title" className="text-2xl sm:text-3xl">
+                  Ficha técnica
+                </h2>
+                <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
+                <dl className="mt-5 grid gap-px overflow-hidden rounded-card border border-border bg-border sm:grid-cols-2">
+                  {specsOf(car).map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="flex items-center justify-between gap-4 bg-surface px-4 py-3 text-sm"
+                    >
+                      <dt className="text-text-muted">{label}</dt>
+                      <dd className="text-right font-semibold">
+                        {label === "Etiqueta ambiental" ? (
+                          <Badge tone="neutral">{value}</Badge>
+                        ) : (
+                          value
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            </Reveal>
+
+            {/* Equipamiento */}
+            {car.equipamiento?.length > 0 && (
+              <Reveal delay={120}>
+                <section className="mt-10" aria-labelledby="equip-title">
+                  <h2 id="equip-title" className="text-2xl sm:text-3xl">
+                    Equipamiento
+                  </h2>
+                  <span aria-hidden="true" className="mt-3 block h-0.5 w-14 bg-accent" />
+                  <ul className="mt-5 flex flex-wrap gap-2.5">
+                    {car.equipamiento.map((item) => (
+                      <li
+                        key={item}
+                        className="rounded-pill border border-border bg-surface-2 px-4 py-1.5 text-sm text-text-muted"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </Reveal>
+            )}
+          </div>
         </div>
 
         {/* Relacionados */}
         {relacionados.length > 0 && (
           <section className="mt-16 border-t border-border pt-12" aria-labelledby="relacionados-title">
-            <h2 id="relacionados-title" className="text-3xl sm:text-4xl">
+            <h2 id="relacionados-title" className="text-2xl sm:text-3xl lg:text-4xl">
               Otros coches que te pueden interesar
             </h2>
             <span aria-hidden="true" className="mt-3 mb-8 block h-0.5 w-14 bg-accent" />
